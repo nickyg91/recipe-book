@@ -5,10 +5,10 @@ using RecipeBook.Domain.Entities;
 
 namespace RecipeBook.Infrastructure.Database.Context.RecipeBook.EntityTypeConfigurations;
 
-public class RecipeEntityTypeConfiguration : BaseEntityTypeConfiguration<Recipe>
+public class RecipeEntityTypeConfiguration : BaseEntityTypeConfiguration<RecipeEntity>
 {
     protected override string  TableName => "recipe";
-    public override void Configure(EntityTypeBuilder<Recipe> builder)
+    public override void Configure(EntityTypeBuilder<RecipeEntity> builder)
     {
         builder.Property(x => x.Name)
             .IsRequired()

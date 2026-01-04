@@ -4,10 +4,10 @@ using RecipeBook.Domain.Entities;
 
 namespace RecipeBook.Infrastructure.Database.Context.RecipeBook.EntityTypeConfigurations;
 
-public class RecipeStepEntityConfigurationType : BaseEntityTypeConfiguration<RecipeStep>
+public class RecipeStepEntityConfigurationType : BaseEntityTypeConfiguration<RecipeStepEntity>
 {
     protected override string TableName => "recipe_step";
-    public override void Configure(EntityTypeBuilder<RecipeStep> builder)
+    public override void Configure(EntityTypeBuilder<RecipeStepEntity> builder)
     {
         builder.Property(x => x.StepDirections)
             .IsRequired()

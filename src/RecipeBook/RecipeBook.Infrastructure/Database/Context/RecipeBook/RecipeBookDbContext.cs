@@ -10,11 +10,11 @@ public class RecipeBookDbContext : DbContext
         
     }
     
-    public virtual DbSet<User> Users { get; set; }
-    public virtual DbSet<Recipe> Recipes { get; set; }
-    public virtual DbSet<RecipeIngredient> RecipeIngredients { get; set; }
-    public virtual DbSet<RecipeStep> RecipeSteps { get; set; }
-    public virtual DbSet<RecipeStepIngredient> RecipeStepIngredients { get; set; }
+    public virtual DbSet<UserEntity> Users { get; set; }
+    public virtual DbSet<RecipeEntity> Recipes { get; set; }
+    public virtual DbSet<RecipeIngredientEntity> RecipeIngredients { get; set; }
+    public virtual DbSet<RecipeStepEntity> RecipeSteps { get; set; }
+    public virtual DbSet<RecipeStepIngredientEntity> RecipeStepIngredients { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

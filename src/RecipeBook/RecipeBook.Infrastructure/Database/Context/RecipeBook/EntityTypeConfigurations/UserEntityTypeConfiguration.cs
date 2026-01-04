@@ -4,10 +4,10 @@ using RecipeBook.Domain.Entities;
 
 namespace RecipeBook.Infrastructure.Database.Context.RecipeBook.EntityTypeConfigurations;
 
-public class UserEntityTypeConfiguration : BaseEntityTypeConfiguration<User>
+public class UserEntityTypeConfiguration : BaseEntityTypeConfiguration<UserEntity>
 {
     protected override string  TableName => "user";
-    public override void Configure(EntityTypeBuilder<User> builder)
+    public override void Configure(EntityTypeBuilder<UserEntity> builder)
     {
         builder.Property(u => u.Username)
             .IsRequired()
@@ -28,6 +28,13 @@ public class UserEntityTypeConfiguration : BaseEntityTypeConfiguration<User>
         builder.Property(x => x.DateOfBirth)
             .IsRequired(false)
             .HasColumnName("date_of_birth");
+
+        // builder.Property(x => x.IsEmailConfirmed)
+        //     .HasColumnName("is_email_confirmed");
+        //
+        // builder.Property(x => x.EmailConfirmationToken)
+        //     .HasColumnName("email_confirmation_token")
+        //     .IsRequired(false);
 
         builder
             .HasMany(x => x.Recipes)

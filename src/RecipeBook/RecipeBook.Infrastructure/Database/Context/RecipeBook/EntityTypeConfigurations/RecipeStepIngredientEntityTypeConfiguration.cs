@@ -4,10 +4,10 @@ using RecipeBook.Domain.Entities;
 
 namespace RecipeBook.Infrastructure.Database.Context.RecipeBook.EntityTypeConfigurations;
 
-public class RecipeStepIngredientEntityTypeConfiguration : BaseEntityTypeConfiguration<RecipeStepIngredient>
+public class RecipeStepIngredientEntityTypeConfiguration : BaseEntityTypeConfiguration<RecipeStepIngredientEntity>
 {
     protected override string TableName => "recipe_step_ingredient";
-    public override void Configure(EntityTypeBuilder<RecipeStepIngredient> builder)
+    public override void Configure(EntityTypeBuilder<RecipeStepIngredientEntity> builder)
     {
         builder.Property(x => x.RecipeId)
             .HasColumnName("recipe_id");

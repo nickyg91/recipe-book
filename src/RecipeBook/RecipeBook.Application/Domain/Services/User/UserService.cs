@@ -3,6 +3,7 @@ using RecipeBook.Application.Domain.Dto;
 using RecipeBook.Application.Exceptions;
 using RecipeBook.Application.Mappers;
 using RecipeBook.Application.Security;
+using RecipeBook.Domain.Entities;
 using RecipeBook.Infrastructure.Database.Context.RecipeBook;
 
 namespace RecipeBook.Application.Domain.Services.User;
@@ -23,7 +24,7 @@ internal class UserService(RecipeBookDbContext dbContext) : IUserService
         {
             throw new UserExistsException("A user already exists with this email.");
         }
-        RecipeBook.Domain.Entities.User userEntity = _mapper.ToUserEntity(userDto);
+        UserEntity userEntity = _mapper.ToUserEntity(userDto);
         userEntity.Password = PasswordHasher.HashPassword(userDto.Password!);
         _dbContext.Users.Add(userEntity);
         await _dbContext.SaveChangesAsync(cancellationToken);
@@ -33,7 +34,7 @@ internal class UserService(RecipeBookDbContext dbContext) : IUserService
     public async Task<UserDto> GetUserByEmailAndPasswordAsync(string email, string password,
         CancellationToken cancellationToken)
     {
-        RecipeBook.Domain.Entities.User? user =
+        UserEntity? user =
             await _dbContext.Users.FirstOrDefaultAsync(x => x.Email == email, cancellationToken);
 
         if (user == null)
