@@ -1,21 +1,21 @@
 using Microsoft.EntityFrameworkCore;
-using RecipeBook.Application.Domain.Dto;
+using RecipeBook.Application.Domain.Services.User;
+using RecipeBook.Application.Dto;
 using RecipeBook.Application.Exceptions;
 using RecipeBook.Application.Mappers;
 using RecipeBook.Application.Security;
-using RecipeBook.Domain.Entities;
+using RecipeBook.Domain.Entities.Users;
 using RecipeBook.Infrastructure.Database.Context.RecipeBook;
 
-namespace RecipeBook.Application.Domain.Services.User;
+namespace RecipeBook.Application.Services.User;
 
-internal class UserService(RecipeBookDbContext dbContext) : IUserService
+internal sealed class UserService(RecipeBookDbContext dbContext) : IUserService
 {
-    private readonly RecipeBookDbContext _dbContext = dbContext;
     private readonly UserDtoMapper _mapper = new();
 
     public async Task<bool> IsUsernameTakenAsync(string username, CancellationToken cancellationToken)
     {
-        return await _dbContext.Users.AnyAsync(x => x.Username == username, cancellationToken);
+        return await dbContext.Users.AnyAsync(x => x.Username == username, cancellationToken);
     }
 
     public async Task<UserDto> CreateUserAccountAsync(UserDto userDto, CancellationToken cancellationToken)
@@ -26,8 +26,8 @@ internal class UserService(RecipeBookDbContext dbContext) : IUserService
         }
         UserEntity userEntity = _mapper.ToUserEntity(userDto);
         userEntity.Password = PasswordHasher.HashPassword(userDto.Password!);
-        _dbContext.Users.Add(userEntity);
-        await _dbContext.SaveChangesAsync(cancellationToken);
+        dbContext.Users.Add(userEntity);
+        await dbContext.SaveChangesAsync(cancellationToken);
         return _mapper.ToUserDto(userEntity);
     }
 
@@ -35,7 +35,7 @@ internal class UserService(RecipeBookDbContext dbContext) : IUserService
         CancellationToken cancellationToken)
     {
         UserEntity? user =
-            await _dbContext.Users.FirstOrDefaultAsync(x => x.Email == email, cancellationToken);
+            await dbContext.Users.FirstOrDefaultAsync(x => x.Email == email, cancellationToken);
 
         if (user == null)
         {
@@ -49,6 +49,6 @@ internal class UserService(RecipeBookDbContext dbContext) : IUserService
 
     private async Task<bool> IsEmailTakenAsync(string email, CancellationToken cancellationToken)
     {
-        return await _dbContext.Users.AnyAsync(x => x.Email == email, cancellationToken);
+        return await dbContext.Users.AnyAsync(x => x.Email == email, cancellationToken);
     }
 }

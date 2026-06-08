@@ -1,4 +1,4 @@
-namespace RecipeBook.Application.Domain.Dto;
+namespace RecipeBook.Application.Dto;
 
 public record UserDto
 {

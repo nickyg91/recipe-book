@@ -1,5 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using RecipeBook.Domain.Entities;
+using RecipeBook.Domain.Entities.Recipes;
+using RecipeBook.Domain.Entities.Users;
 
 namespace RecipeBook.Infrastructure.Database.Context.RecipeBook;
 

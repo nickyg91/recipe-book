@@ -1,4 +1,4 @@
-using RecipeBook.Application.Domain.Dto;
+using RecipeBook.Application.Dto;
 
 namespace RecipeBook.Application.Domain.Services.User;
 

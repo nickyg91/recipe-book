@@ -1,4 +1,6 @@
-namespace RecipeBook.Domain.Entities;
+using RecipeBook.Domain.Entities.Users;
+
+namespace RecipeBook.Domain.Entities.Recipes;
 
 public class RecipeEntity : BaseEntity
 {

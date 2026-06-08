@@ -1,5 +1,6 @@
-using RecipeBook.Application.Domain.Dto;
+using RecipeBook.Application.Dto;
 using RecipeBook.Domain.Entities;
+using RecipeBook.Domain.Entities.Users;
 using Riok.Mapperly.Abstractions;
 
 namespace RecipeBook.Application.Mappers;
