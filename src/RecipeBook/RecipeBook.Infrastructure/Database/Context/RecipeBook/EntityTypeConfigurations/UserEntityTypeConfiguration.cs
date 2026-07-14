@@ -26,16 +26,12 @@ public class UserEntityTypeConfiguration : BaseEntityTypeConfiguration<UserEntit
             .HasColumnName("password")
             .HasMaxLength(512);
 
-        builder.Property(x => x.DateOfBirth)
-            .IsRequired(false)
-            .HasColumnName("date_of_birth");
-
-        // builder.Property(x => x.IsEmailConfirmed)
-        //     .HasColumnName("is_email_confirmed");
-        //
-        // builder.Property(x => x.EmailConfirmationToken)
-        //     .HasColumnName("email_confirmation_token")
-        //     .IsRequired(false);
+        builder.Property(x => x.IsEmailConfirmed)
+            .HasColumnName("is_email_confirmed");
+        
+        builder.Property(x => x.EmailConfirmationToken)
+            .HasColumnName("email_confirmation_token")
+            .IsRequired(false);
 
         builder
             .HasMany(x => x.Recipes)

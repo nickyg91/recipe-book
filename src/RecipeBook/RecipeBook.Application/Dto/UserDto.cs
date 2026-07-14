@@ -6,5 +6,4 @@ public record UserDto
     public required string Username { get; init; }
     public required string Email { get; init; }
     public string? Password { get; init; } = string.Empty;
-    public DateOnly? DateOfBirth { get; init; }
 }
