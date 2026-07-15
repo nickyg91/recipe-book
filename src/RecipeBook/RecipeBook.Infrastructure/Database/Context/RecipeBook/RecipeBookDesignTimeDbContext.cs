@@ -17,4 +17,4 @@ public class RecipeBookDesignTimeDbContext : IDesignTimeDbContextFactory<RecipeB
 
         return new RecipeBookDbContext(optionsBuilder.Options);
     }
-}git
+}

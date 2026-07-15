@@ -1,6 +1,8 @@
+using System.Net.Mail;
+
 namespace RecipeBook.Application.Services.Email;
 
 public interface IEmailService
 {
-    Task SendEmail(string to, string from, string subject, string body);
+    Task SendEmail(MailMessage mailMessage);
 }
