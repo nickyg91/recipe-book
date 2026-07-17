@@ -1,16 +1,15 @@
 {
   "$schema": "https://json.schemastore.org/launchsettings.json",
   "profiles": {
-    "http": {
+    "https": {
       "commandName": "Project",
       "dotnetRunMessages": true,
       "launchBrowser": true,
-      "launchUrl": "todos",
       "applicationUrl": "http://localhost:5266",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development",
-        "TOKEN_ISSUER": "https://localhost:5002",
-        "TOKEN_AUDIENCE": "https://localhost:5001",
+        "TOKEN_ISSUER": "http://localhost:5266",
+        "TOKEN_AUDIENCE": "https://localhost:5002",
         "TOKEN_SECRET": "b65ba2d0-991c-4312-99c6-11e4f59052fa"
       }
     }

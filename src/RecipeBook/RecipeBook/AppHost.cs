@@ -12,7 +12,7 @@ if (string.IsNullOrEmpty(connectionString))
     throw new Exception("RecipeBook connection string is empty");
 }
 
-IResourceBuilder<IResourceWithConnectionString> postgresDb = builder.AddConnectionString(connectionString);
+IResourceBuilder<IResourceWithConnectionString> postgresDb = builder.AddConnectionString("RecipeBook");
 
 builder.AddProject<RecipeBook_Api>("recipebook-api")
     .WithReference(postgresDb);

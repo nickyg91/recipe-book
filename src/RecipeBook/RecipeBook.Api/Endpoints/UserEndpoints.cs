@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Mvc;
 using RecipeBook.Application.Domain.Services.User;
 using RecipeBook.Application.Dto;
 using RecipeBook.Application.Exceptions;
@@ -13,7 +14,7 @@ public static class UserEndpoints
             UserDto user, 
             CancellationToken cancellationToken, 
             IUserService userService, 
-            ILogger logger) =>
+            ILogger<IUserService> logger) =>
         {
             try
             {

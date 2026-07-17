@@ -2,6 +2,7 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using RecipeBook.Api.Endpoints;
 using RecipeBook.Application.Extensions;
+using RecipeBook.Application.Services.Email;
 using RecipeBook.Domain.Authentication;
 using RecipeBook.Domain.Email;
 using RecipeBook.Infrastructure.Database.Context.RecipeBook;
@@ -28,17 +29,19 @@ TokenSettings tokenSettings = new()
 };
 
 builder.Services.AddSingleton(tokenSettings);
+builder.Services.AddScoped<IEmailService, EmailService>();
+builder.Services.AddLogging();
+SmtpSettings smtpSettings = builder.Configuration.GetSection("SmtpSettings").Get<SmtpSettings>() ?? throw new ArgumentException("SmtpSettings is not set");
 
-string smtpHost = builder.Configuration["SMTP_HOST"] ?? throw new ArgumentException("SMTP_HOST is not set");
-string smtpPort = builder.Configuration["SMTP_PORT"] ?? throw new ArgumentException("SMTP_PORT is not set");;
+string frontendUrl = builder.Configuration["FrontendUrl"] ?? throw new ArgumentException("FrontendUrl is not set");
 
-SmtpSettings smtpSettings = new(smtpHost, int.Parse(smtpPort));
-
-builder.Services.AddSmtpClient(smtpSettings);
+builder.Services.AddKeyedSingleton("frontendUrl", frontendUrl);
+builder.Services.AddSingleton(smtpSettings);
 
 builder.Services.AddUserServices();
 
-builder.AddNpgsqlDbContext<RecipeBookDbContext>("recipe-book");
+builder.AddNpgsqlDbContext<RecipeBookDbContext>("RecipeBook");
+builder.Services.AddCors();
 
 WebApplication app = builder.Build();
 

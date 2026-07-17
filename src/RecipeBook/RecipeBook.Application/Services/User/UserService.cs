@@ -1,15 +1,21 @@
+using System.Net.Mail;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using RecipeBook.Application.Domain.Services.User;
 using RecipeBook.Application.Dto;
 using RecipeBook.Application.Exceptions;
 using RecipeBook.Application.Mappers;
 using RecipeBook.Application.Security;
+using RecipeBook.Application.Services.Email;
 using RecipeBook.Domain.Entities.Users;
 using RecipeBook.Infrastructure.Database.Context.RecipeBook;
 
 namespace RecipeBook.Application.Services.User;
 
-internal sealed class UserService(RecipeBookDbContext dbContext) : IUserService
+internal sealed class UserService(
+    RecipeBookDbContext dbContext, 
+    IEmailService emailService,
+    [FromKeyedServices("frontendUrl")] string frontendUrl) : IUserService
 {
     private readonly UserDtoMapper _mapper = new();
 
@@ -26,8 +32,15 @@ internal sealed class UserService(RecipeBookDbContext dbContext) : IUserService
         }
         UserEntity userEntity = _mapper.ToUserEntity(userDto);
         userEntity.Password = PasswordHasher.HashPassword(userDto.Password!);
+        userEntity.EmailConfirmationToken = Guid.NewGuid();
         dbContext.Users.Add(userEntity);
         await dbContext.SaveChangesAsync(cancellationToken);
+
+        string body = $"Please confirm your account by clicking the following link: <a src='{frontendUrl}/confirm-account/{userEntity.EmailConfirmationToken}'>Confirm account.</a>";
+        
+        MailMessage message = new("no-reply@recipebook.nickganter.dev", userDto.Email, "Confirm Account", body);
+        message.To.Add(userDto.Email);
+        await emailService.SendEmail(message);
         return _mapper.ToUserDto(userEntity);
     }
 
