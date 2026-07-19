@@ -1,0 +1,15 @@
+info:
+  name: Confirm Account
+  type: http
+  seq: 2
+
+http:
+  method: PUT
+  url: http://localhost:5266/api/users/confirm-account/ccb07247-cf64-478a-9df1-ec63d75fc2ca
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
