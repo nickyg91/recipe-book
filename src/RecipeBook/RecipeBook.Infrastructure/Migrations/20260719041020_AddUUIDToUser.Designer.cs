@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using RecipeBook.Infrastructure.Database.Context.RecipeBook;
@@ -11,9 +12,11 @@ using RecipeBook.Infrastructure.Database.Context.RecipeBook;
 namespace RecipeBook.Infrastructure.Migrations
 {
     [DbContext(typeof(RecipeBookDbContext))]
-    partial class RecipeBookDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260719041020_AddUUIDToUser")]
+    partial class AddUUIDToUser
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

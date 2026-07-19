@@ -33,6 +33,14 @@ public class UserEntityTypeConfiguration : BaseEntityTypeConfiguration<UserEntit
             .HasColumnName("email_confirmation_token")
             .IsRequired(false);
 
+        builder.Property(x => x.Uuid)
+            .HasColumnName("uuid")
+            .IsRequired();
+        
+        builder.HasIndex(x => x.Uuid)
+            .IsUnique()
+            .HasDatabaseName("idx_user_uuid");
+        
         builder
             .HasMany(x => x.Recipes)
             .WithOne(x => x.User)

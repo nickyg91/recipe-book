@@ -10,4 +10,5 @@ public class UserEntity : BaseEntity
     public bool IsEmailConfirmed { get; set; }
     public Guid? EmailConfirmationToken { get; set; }
     public ICollection<RecipeEntity> Recipes { get; set; } = [];
+    public required Guid Uuid { get; set; }
 }

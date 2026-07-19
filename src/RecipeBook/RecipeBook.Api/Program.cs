@@ -1,3 +1,4 @@
+using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using RecipeBook.Api.Endpoints;
@@ -6,6 +7,8 @@ using RecipeBook.Application.Services.Email;
 using RecipeBook.Domain.Authentication;
 using RecipeBook.Domain.Email;
 using RecipeBook.Infrastructure.Database.Context.RecipeBook;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
 
 WebApplicationBuilder builder = WebApplication.CreateSlimBuilder(args);
 
@@ -30,7 +33,27 @@ TokenSettings tokenSettings = new()
 
 builder.Services.AddSingleton(tokenSettings);
 builder.Services.AddScoped<IEmailService, EmailService>();
+builder.Services.AddTokenService();
 builder.Services.AddLogging();
+
+builder.Services.AddAuthentication(opt =>
+{
+    opt.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    opt.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+}).AddJwtBearer(opt =>
+{
+    opt.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidateIssuer = true,
+        ValidateAudience = true,
+        ValidateLifetime = true,
+        ValidateIssuerSigningKey = true,
+        ValidIssuer = tokenSettings.Issuer,
+        ValidAudience = tokenSettings.Audience,
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(tokenSettings.Secret))
+    };
+});
+
 SmtpSettings smtpSettings = builder.Configuration.GetSection("SmtpSettings").Get<SmtpSettings>() ?? throw new ArgumentException("SmtpSettings is not set");
 
 string frontendUrl = builder.Configuration["FrontendUrl"] ?? throw new ArgumentException("FrontendUrl is not set");
