@@ -4,10 +4,11 @@ using Microsoft.IdentityModel.JsonWebTokens;
 using Microsoft.IdentityModel.Tokens;
 using RecipeBook.Application.Dto;
 using RecipeBook.Domain.Authentication;
+using RecipeBook.Infrastructure.Cache;
 
 namespace RecipeBook.Application.Services.Authentication
 {
-    public class TokenService(TokenSettings settings) : ITokenService
+    public class TokenService(TokenSettings settings, IRedisCache cache) : ITokenService
     {
         private const int AccessTokenMinutes = 60; // 1 hour
         private const int RefreshTokenMinutes = 24 * 60; // 24 hours
@@ -32,9 +33,25 @@ namespace RecipeBook.Application.Services.Authentication
             };
 
             string? token = tokenHandler.CreateToken(tokenDescriptor);
-
+            
             var refreshToken = Guid.NewGuid().ToString();
+            
+            Task.Run(() => cache.SetAsync(refreshToken, user, RefreshTokenMinutes));
+            
             return new JwtToken(token, refreshToken, AccessTokenMinutes * 60, RefreshTokenMinutes * 60);
+        }
+
+        public async Task<JwtToken?> RefreshToken(string refreshToken)
+        {
+            UserDto? user = await cache.GetAsync<UserDto>(refreshToken);
+
+            if (user == null)
+            {
+                return null;
+            }
+
+            await cache.RemoveAsync(refreshToken);
+            return CreateToken(user);
         }
     }
 }

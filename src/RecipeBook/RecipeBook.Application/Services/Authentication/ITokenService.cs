@@ -9,4 +9,5 @@ public interface ITokenService
     /// </summary>
     /// <returns>A tuple containing the access token (JWT) and the refresh token.</returns>
     public JwtToken CreateToken(UserDto user);
+    public Task<JwtToken?> RefreshToken(string refreshToken);
 }

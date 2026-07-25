@@ -14,6 +14,8 @@ if (string.IsNullOrEmpty(connectionString))
 
 IResourceBuilder<IResourceWithConnectionString> postgresDb = builder.AddConnectionString("RecipeBook");
 
+builder.AddRedis("Redis");
+
 builder.AddProject<RecipeBook_Api>("recipebook-api")
     .WithReference(postgresDb);
 

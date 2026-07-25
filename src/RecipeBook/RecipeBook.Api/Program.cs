@@ -9,6 +9,7 @@ using RecipeBook.Domain.Email;
 using RecipeBook.Infrastructure.Database.Context.RecipeBook;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
+using RecipeBook.Infrastructure.Cache;
 
 WebApplicationBuilder builder = WebApplication.CreateSlimBuilder(args);
 
@@ -24,6 +25,8 @@ string tokenSecret = builder.Configuration["TOKEN_SECRET"] ?? throw new Argument
 string tokenIssuer = builder.Configuration["TOKEN_ISSUER"] ?? throw new ArgumentException("TOKEN_ISSUER is not set");
 string tokenAudience = builder.Configuration["TOKEN_AUDIENCE"] ?? throw new ArgumentException("TOKEN_AUDIENCE is not set");
 
+string redisConnectionString = builder.Configuration.GetConnectionString("Redis") ??  throw new ArgumentException("Redis connection string is not set");
+
 TokenSettings tokenSettings = new()
 {
     Secret = tokenSecret,
@@ -35,6 +38,7 @@ builder.Services.AddSingleton(tokenSettings);
 builder.Services.AddScoped<IEmailService, EmailService>();
 builder.Services.AddTokenService();
 builder.Services.AddLogging();
+builder.Services.AddRedisCache(redisConnectionString);
 
 builder.Services.AddAuthentication(opt =>
 {

@@ -1,7 +1,8 @@
 namespace RecipeBook.Infrastructure.Cache;
 
-public interface IRedisCache<T>
+public interface IRedisCache
 {
-    Task<T?> GetAsync(string key, CancellationToken cancellationToken = default);
-    Task SetAsync(string key, T value, int expirationMinutes, CancellationToken cancellationToken = default);
+    Task<T?> GetAsync<T>(string key);
+    Task SetAsync<T>(string key, T value, int? expirationMinutes);
+    Task RemoveAsync(string key);
 }

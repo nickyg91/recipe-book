@@ -73,5 +73,12 @@ public static class UserEndpoints
                 return Results.InternalServerError(e);
             }
         });
+
+        group.MapPut("token/{refreshToken}/refresh",
+            async (string refreshToken, ITokenService tokenService) =>
+            {
+                JwtToken? token = await tokenService.RefreshToken(refreshToken);
+                return token == null ? Results.Unauthorized() : Results.Ok(token);
+            });
     }
 }
