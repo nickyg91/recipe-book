@@ -5,7 +5,7 @@ info:
 
 http:
   method: POST
-  url: http://localhost:5266/api/users/log-in
+  url: "{{base_url}}/api/users/log-in"
   body:
     type: json
     data: |-
@@ -13,7 +13,14 @@ http:
         "email": "test@test.com",
         "password": "Test12#$"
       }
-  auth: inherit
+
+runtime:
+  scripts:
+    - type: after-response
+      code: |-
+        const data = res.getBody();
+        bru.setEnvVar("access_token", data.token);
+        bru.setEnvVar("refresh_token", data.refreshToken)
 
 settings:
   encodeUrl: true

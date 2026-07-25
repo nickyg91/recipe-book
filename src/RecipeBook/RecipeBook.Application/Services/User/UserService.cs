@@ -66,6 +66,12 @@ internal sealed class UserService(
             : _mapper.ToUserDto(user);
     }
 
+    public async Task<UserDto> GetUserByUuid(Guid uuid, CancellationToken cancellationToken)
+    {
+        UserEntity userEntity = await dbContext.Users.FirstOrDefaultAsync(x => x.Uuid == uuid, cancellationToken) ?? throw new UserNotFoundException($"User {uuid} not found.");  
+        return _mapper.ToUserDto(userEntity);
+    }
+
     public async Task ConfirmEmailAsync(Guid emailConfirmationToken, CancellationToken cancellationToken)
     {
         UserEntity? user = await dbContext.Users.FirstOrDefaultAsync(x => x.EmailConfirmationToken == emailConfirmationToken, cancellationToken);

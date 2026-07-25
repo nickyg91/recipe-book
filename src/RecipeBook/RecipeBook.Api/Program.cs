@@ -58,6 +58,8 @@ builder.Services.AddAuthentication(opt =>
     };
 });
 
+builder.Services.AddAuthorization();
+
 SmtpSettings smtpSettings = builder.Configuration.GetSection("SmtpSettings").Get<SmtpSettings>() ?? throw new ArgumentException("SmtpSettings is not set");
 
 string frontendUrl = builder.Configuration["FrontendUrl"] ?? throw new ArgumentException("FrontendUrl is not set");
@@ -86,6 +88,9 @@ else
         policy.WithOrigins("cookbook.nickganter.dev");
     });
 }
+
+app.UseAuthentication();
+app.UseAuthorization();
 
 app.MapUserEndpoints();
 

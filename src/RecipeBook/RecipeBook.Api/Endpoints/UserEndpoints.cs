@@ -1,3 +1,4 @@
+using System.Security.Claims;
 using Microsoft.AspNetCore.Mvc;
 using RecipeBook.Api.Models;
 using RecipeBook.Application.Dto;
@@ -75,10 +76,22 @@ public static class UserEndpoints
         });
 
         group.MapPut("token/{refreshToken}/refresh",
-            async (string refreshToken, ITokenService tokenService) =>
+            async (Guid refreshToken, ITokenService tokenService) =>
             {
-                JwtToken? token = await tokenService.RefreshToken(refreshToken);
+                JwtToken? token = await tokenService.RefreshToken(refreshToken.ToString());
                 return token == null ? Results.Unauthorized() : Results.Ok(token);
             });
+
+        group.MapGet("me", async (HttpContext ctx, IUserService userService, CancellationToken cancellationToken) =>
+        {
+            string? guid = ctx.User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier)?.Value;
+            if (guid == null)
+            {
+                return Results.Unauthorized();
+            }
+
+            UserDto user = await userService.GetUserByUuid(Guid.Parse(guid!), cancellationToken);
+            return Results.Ok(user);
+        }).RequireAuthorization();
     }
 }

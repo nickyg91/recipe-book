@@ -10,6 +10,7 @@ internal partial class UserDtoMapper
 {
     [MapperIgnoreSource(nameof(UserEntity.Recipes))]
     [MapperIgnoreSource(nameof(UserEntity.CreatedAtUtc))]
+    [MapperIgnoreTarget(nameof(UserEntity.Password))]
     public partial UserDto ToUserDto(UserEntity user);
     
     [MapperIgnoreTarget(nameof(UserEntity.Recipes))]

@@ -1,11 +1,11 @@
 info:
-  name: Confirm Account
+  name: Refresh Token
   type: http
-  seq: 2
+  seq: 4
 
 http:
   method: PUT
-  url: "{{base_url}}/api/users/confirm-account/{{confirm_guid}}"
+  url: "{{base_url}}/api/users/token/{{refresh_token}}/refresh"
 
 settings:
   encodeUrl: true
