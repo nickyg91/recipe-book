@@ -43,6 +43,7 @@ const onSubmitClicked = async () => {};
         <UInput class="w-full" type="password" v-model="credentials.password"></UInput>
       </UFormField>
       <UButton
+        @click="onSubmitClicked"
         :loading="isLoading"
         class="justify-center"
         size="xl"

@@ -1,41 +1,64 @@
 @import 'tailwindcss';
 @import '@nuxt/ui';
 
+:root {
+  /* Semantic background tokens - override these to change entire app background */
+  --ui-bg: #f8fafc;
+  --ui-bg-surface: #f8fafc;
+  --ui-bg-surface-ring: #f8fafc;
+  --ui-bg-highlight: #f1f5f9;
+  --ui-bg-accented: #f1f5f9;
+  --ui-bg-slate: #f8fafc;
+  --color-default: #f8fafc;
+  --color-elevated: #f1f5f9;
+  --color-surface: #f8fafc;
+}
+
+.dark {
+  --ui-bg: var(--ui-color-neutral-950);
+  --ui-bg-muted: var(--ui-color-neutral-750);
+  --ui-bg-elevated: var(--ui-color-neutral-700);
+  --ui-bg-accented: var(--ui-color-neutral-600);
+  --ui-bg-inverted: white;
+}
+
 @theme {
-  /* Semantic color aliases for Nuxt UI theming */
-  --color-primary-50: #ecfdf5;
-  --color-primary-100: #d1fae5;
-  --color-primary-200: #a7f3d0;
-  --color-primary-300: #6ee7b7;
-  --color-primary-400: #34d399;
-  --color-primary-500: #10b981;
-  --color-primary-600: #059669;
-  --color-primary-700: #047857;
-  --color-primary-800: #065f4e;
-  --color-primary-900: #064e3b;
-  --color-primary-950: #022c22;
+  /* Emerald color scale (used by primary) */
+  --color-emerald-50: #ecfdf5;
+  --color-emerald-100: #d1fae5;
+  --color-emerald-200: #a7f3d0;
+  --color-emerald-300: #6ee7b7;
+  --color-emerald-400: #34d399;
+  --color-emerald-500: #10b981;
+  --color-emerald-600: #059669;
+  --color-emerald-700: #047857;
+  --color-emerald-800: #065f4e;
+  --color-emerald-900: #064e3b;
+  --color-emerald-950: #022c22;
 
-  --color-secondary-50: #fff7ed;
-  --color-secondary-100: #ffedd5;
-  --color-secondary-200: #fed7aa;
-  --color-secondary-300: #fdba85;
-  --color-secondary-400: #fb923c;
-  --color-secondary-500: #f97316;
-  --color-secondary-600: #ea580c;
-  --color-secondary-700: #c2410c;
-  --color-secondary-800: #9a3412;
-  --color-secondary-900: #7c2d12;
-  --color-secondary-950: #431407;
+  /* Orange color scale (used by secondary) */
+  --color-orange-50: #fff7ed;
+  --color-orange-100: #ffedd5;
+  --color-orange-200: #fed7aa;
+  --color-orange-300: #fdba85;
+  --color-orange-400: #fb923c;
+  --color-orange-500: #f97316;
+  --color-orange-600: #ea580c;
+  --color-orange-700: #c2410c;
+  --color-orange-800: #9a3412;
+  --color-orange-900: #7c2d12;
+  --color-orange-950: #431407;
 
-  --color-neutral-50: #f8fafc;
-  --color-neutral-100: #f1f5f9;
-  --color-neutral-200: #e2e8f0;
-  --color-neutral-300: #cbdcef;
-  --color-neutral-400: #94a3b8;
-  --color-neutral-500: #64748b;
-  --color-neutral-600: #475569;
-  --color-neutral-700: #334b7b;
-  --color-neutral-800: #1e293b;
-  --color-neutral-900: #0f172a;
-  --color-neutral-950: #020617;
+  /* Slate color scale (used by neutral) */
+  --color-slate-50: #f8fafc;
+  --color-slate-100: #f1f5f9;
+  --color-slate-200: #e2e8f0;
+  --color-slate-300: #cbdcef;
+  --color-slate-400: #94a3b8;
+  --color-slate-500: #64748b;
+  --color-slate-600: #475569;
+  --color-slate-700: #334b7b;
+  --color-slate-800: #1e293b;
+  --color-slate-900: #0f172a;
+  --color-slate-950: #020617;
 }
