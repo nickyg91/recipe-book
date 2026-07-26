@@ -69,7 +69,7 @@ axiosInstance.interceptors.response.use(
   },
 );
 
-export const httpClient = () => {
+export const useHttpClient = () => {
   const get = async <T>(url: string, axiosConfig?: AxiosRequestConfig): Promise<T> => {
     const result = await axiosInstance.get<T>(url, axiosConfig);
     return result.data;
