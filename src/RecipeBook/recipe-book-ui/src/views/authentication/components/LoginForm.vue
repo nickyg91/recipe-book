@@ -1,11 +1,17 @@
 <script setup lang="ts">
 import type { ILogInRequest } from '@/core/models/ILogInRequest';
+import { useUserStore } from '@/stores/userStore';
 import { useRegle } from '@regle/core';
 import { required, withMessage } from '@regle/rules';
+import { AxiosError } from 'axios';
 import { ref, computed } from 'vue';
 
+defineEmits<{ (e: 'createClicked'): void }>();
+
+const userStore = useUserStore();
 const isLoading = ref(false);
 
+const errorMessage = ref<string | undefined>();
 const credentials = ref<ILogInRequest>({
   email: '',
   password: '',
@@ -29,9 +35,26 @@ const passwordError = computed(() => {
   return r$.$errors?.password?.[0] || '';
 });
 
-const onSubmitClicked = async () => {};
+const onSubmitClicked = async () => {
+  errorMessage.value = undefined;
+  if (isLoading.value) {
+    return;
+  }
+  isLoading.value = true;
+  try {
+    await userStore.logIn(credentials.value);
+  } catch (err) {
+    isLoading.value = false;
+    if (err instanceof AxiosError) {
+      errorMessage.value = err.response?.data;
+    } else {
+      throw err;
+    }
+  } finally {
+    isLoading.value = false;
+  }
+};
 </script>
-
 <template>
   <UCard class="h-fit w-full max-w-md mx-auto">
     <div class="flex flex-col gap-y-5 w-full">
@@ -50,8 +73,11 @@ const onSubmitClicked = async () => {};
         icon="i-lucide-rocket"
         label="Submit"
       ></UButton>
+      <div v-if="errorMessage">
+        <UAlert :description="errorMessage" color="error"></UAlert>
+      </div>
       <div class="text-center">Don't have an account?</div>
-      <ULink> Sign up. </ULink>
+      <ULink @click="$emit('createClicked')"> Sign up. </ULink>
     </div>
   </UCard>
 </template>

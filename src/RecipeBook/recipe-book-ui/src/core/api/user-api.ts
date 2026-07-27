@@ -19,3 +19,13 @@ export const getCurrentUser = async (abortSignal?: AbortSignal): Promise<IUser> 
     signal: abortSignal,
   });
 };
+
+export const checkUsernameAvailability = async (
+  username: string,
+  abortSignal?: AbortSignal,
+): Promise<boolean> => {
+  const httpClient = useHttpClient();
+  return await httpClient.post('users/username-available', username, {
+    signal: abortSignal,
+  });
+};

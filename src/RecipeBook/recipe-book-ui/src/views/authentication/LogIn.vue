@@ -1,5 +1,8 @@
 <script lang="ts" setup>
-import LoginForm from './LoginForm.vue';
+import { ref } from 'vue';
+import LoginForm from './components/LoginForm.vue';
+import SignUpForm from './components/SignUpForm.vue';
+const showCreateDialog = ref<boolean>(false);
 </script>
 <template>
   <section class="flex flex-col lg:flex-row min-h-screen">
@@ -13,7 +16,12 @@ import LoginForm from './LoginForm.vue';
       </div>
     </div>
     <div class="flex items-center justify-center w-full p-8">
-      <LoginForm />
+      <LoginForm @createClicked="showCreateDialog = true" />
     </div>
+    <UModal v-model:open="showCreateDialog">
+      <template #content>
+        <SignUpForm @cancel="showCreateDialog = false"></SignUpForm>
+      </template>
+    </UModal>
   </section>
 </template>

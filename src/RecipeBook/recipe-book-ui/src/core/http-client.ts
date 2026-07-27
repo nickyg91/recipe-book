@@ -1,8 +1,7 @@
 import axios, { type AxiosRequestConfig } from 'axios';
 import type { IJwt } from './models/IJwtToken';
-
 const axiosInstance = axios.create({
-  baseURL: import.meta.env.BASE_URL,
+  baseURL: import.meta.env.VITE_API_URL,
 });
 
 axiosInstance.interceptors.request.use(

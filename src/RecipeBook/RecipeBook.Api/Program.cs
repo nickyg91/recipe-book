@@ -13,6 +13,8 @@ using RecipeBook.Infrastructure.Cache;
 
 WebApplicationBuilder builder = WebApplication.CreateSlimBuilder(args);
 
+
+builder.Services.AddProblemDetails();
 builder.Configuration.AddEnvironmentVariables();
 
 builder.Services.ConfigureHttpJsonOptions(options =>
@@ -74,21 +76,27 @@ builder.Services.AddCors();
 
 WebApplication app = builder.Build();
 
+
 if (builder.Environment.IsDevelopment())
 {
     app.UseCors(policy =>
     {
-        policy.AllowAnyOrigin();
+        policy.WithOrigins("http://localhost:5173")
+            .AllowAnyHeader()
+            .AllowAnyMethod();
     });
 }
 else
 {
     app.UseCors(policy =>
     {
-        policy.WithOrigins("cookbook.nickganter.dev");
+        policy.WithOrigins("recipes.nickganter.dev")
+            .AllowAnyHeader()
+            .AllowAnyMethod();
     });
 }
 
+app.UseExceptionHandler();
 app.UseAuthentication();
 app.UseAuthorization();
 
