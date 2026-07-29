@@ -15,6 +15,12 @@ const router = createRouter({
       component: () => import('@/views/home/HomePage.vue'),
       meta: { requiresAuth: true },
     },
+    {
+      name: 'ConfirmAccount',
+      path: '/confirm-account/:emailConfirmationToken',
+      component: () => import('@/views/authentication/ConfirmAccount.vue'),
+      props: true,
+    },
   ],
 });
 

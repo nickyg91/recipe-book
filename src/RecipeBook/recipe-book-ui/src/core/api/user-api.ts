@@ -43,3 +43,10 @@ export const signUp = async (
     signal: abortSignal,
   });
 };
+
+export const confirmAccount = async (emailConfirmationToken: string, abortSignal?: AbortSignal) => {
+  const httpClient = useHttpClient();
+  await httpClient.put(`users/confirm-account/${emailConfirmationToken}`, undefined, {
+    signal: abortSignal,
+  });
+};
