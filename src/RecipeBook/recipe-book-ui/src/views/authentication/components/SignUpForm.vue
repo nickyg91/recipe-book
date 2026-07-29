@@ -7,6 +7,8 @@ import { useDebounceFn } from '@vueuse/core';
 import { AxiosError } from 'axios';
 import { computed, ref, watch } from 'vue';
 
+const toast = useToast();
+
 let usernameCheckAbortController: AbortController | undefined;
 let signUpAbortController: AbortController | undefined;
 const isUsernameCheckLoading = ref<boolean>(false);
@@ -89,6 +91,13 @@ const createAccount = async () => {
       signUpAbortController = new AbortController();
     }
     await signUp(signUpRequest.value, signUpAbortController?.signal);
+    toast.add({
+      color: 'success',
+      duration: 5000,
+      description: 'Sign-up successful! Look for an email to confirm your account.',
+      title: 'You did it! 🚀',
+    });
+    emits('cancel');
   } catch (err) {
     isSignUpLoading.value = false;
     if (err instanceof AxiosError && err.code !== 'ERR_CANCELED') {
