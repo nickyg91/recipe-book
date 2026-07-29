@@ -6,8 +6,6 @@ import { required, withMessage } from '@regle/rules';
 import { AxiosError } from 'axios';
 import { ref, computed } from 'vue';
 
-defineEmits<{ (e: 'createClicked'): void }>();
-
 const userStore = useUserStore();
 const isLoading = ref(false);
 
@@ -36,6 +34,9 @@ const passwordError = computed(() => {
 });
 
 const onSubmitClicked = async () => {
+  if (r$.$invalid) {
+    return;
+  }
   errorMessage.value = undefined;
   if (isLoading.value) {
     return;
@@ -56,30 +57,27 @@ const onSubmitClicked = async () => {
 };
 </script>
 <template>
-  <UCard class="h-fit w-full max-w-md mx-auto">
-    <div class="flex flex-col gap-y-5 w-full">
-      <div class="text-xl">Log In</div>
-      <UFormField label="Email" required :error="emailError || undefined">
-        <UInput class="w-full" type="text" v-model="credentials.email"></UInput>
-      </UFormField>
-      <UFormField label="Password" required :error="passwordError || undefined">
-        <UInput class="w-full" type="password" v-model="credentials.password"></UInput>
-      </UFormField>
-      <UButton
-        @click="onSubmitClicked"
-        :loading="isLoading"
-        class="justify-center"
-        size="xl"
-        icon="i-lucide-rocket"
-        label="Submit"
-      ></UButton>
-      <div v-if="errorMessage">
-        <UAlert :description="errorMessage" color="error"></UAlert>
-      </div>
-      <div class="text-center">Don't have an account?</div>
-      <ULink @click="$emit('createClicked')"> Sign up. </ULink>
+  <div class="flex flex-col gap-y-5 w-full">
+    <div class="text-xl">Log In</div>
+    <UFormField label="Email" required :error="emailError || undefined">
+      <UInput class="w-full" type="text" v-model="credentials.email"></UInput>
+    </UFormField>
+    <UFormField label="Password" required :error="passwordError || undefined">
+      <UInput class="w-full" type="password" v-model="credentials.password"></UInput>
+    </UFormField>
+    <UButton
+      @click="onSubmitClicked"
+      :loading="isLoading"
+      :disabled="r$.$invalid"
+      class="justify-center"
+      size="xl"
+      icon="i-lucide-rocket"
+      label="Submit"
+    ></UButton>
+    <div v-if="errorMessage">
+      <UAlert :description="errorMessage" color="error"></UAlert>
     </div>
-  </UCard>
+  </div>
 </template>
 
 <style lang="css" scoped></style>

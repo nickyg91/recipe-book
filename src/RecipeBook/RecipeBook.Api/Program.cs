@@ -61,7 +61,7 @@ builder.Services.AddAuthentication(opt =>
 });
 
 builder.Services.AddAuthorization();
-
+builder.Services.AddValidation();
 SmtpSettings smtpSettings = builder.Configuration.GetSection("SmtpSettings").Get<SmtpSettings>() ?? throw new ArgumentException("SmtpSettings is not set");
 
 string frontendUrl = builder.Configuration["FrontendUrl"] ?? throw new ArgumentException("FrontendUrl is not set");

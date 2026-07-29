@@ -1,14 +1,17 @@
 <script setup lang="ts">
-import { checkUsernameAvailability } from '@/core/api/user-api';
+import { checkUsernameAvailability, signUp } from '@/core/api/user-api';
 import type { ISignUpRequest } from '@/core/models/ISignUpRequest';
 import { useRegle } from '@regle/core';
 import { email, maxLength, minLength, regex, required, sameAs, withMessage } from '@regle/rules';
 import { useDebounceFn } from '@vueuse/core';
-import { computed, ref } from 'vue';
+import { AxiosError } from 'axios';
+import { computed, ref, watch } from 'vue';
 
 let usernameCheckAbortController: AbortController | undefined;
+let signUpAbortController: AbortController | undefined;
 const isUsernameCheckLoading = ref<boolean>(false);
 const isUsernameAvailable = ref<boolean>(false);
+const isSignUpLoading = ref<boolean>(false);
 
 const emits = defineEmits<{ (e: 'cancel'): void }>();
 
@@ -25,7 +28,7 @@ const { r$: signUpForm$ } = useRegle(signUpRequest, {
   },
   password: {
     regex: withMessage(
-      regex(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/),
+      regex(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&]).{8,}$/),
       'Password must be at least 8 characters long, have one capital letter, lowercase letter, number, and symbol.',
     ),
   },
@@ -68,66 +71,106 @@ const debouncedUsernameChanged = useDebounceFn(async () => {
     if (!usernameCheckAbortController) {
       usernameCheckAbortController = new AbortController();
     }
-    isUsernameAvailable.value = await checkUsernameAvailability(
+    isUsernameAvailable.value = !(await checkUsernameAvailability(
       signUpRequest.value.username,
       usernameCheckAbortController?.signal,
-    );
+    ));
   }
 }, 500);
 
-const createAccount = () => {};
+const createAccount = async () => {
+  if (signUpForm$.$invalid) {
+    return;
+  }
+  try {
+    isSignUpLoading.value = true;
+    signUpAbortController?.abort();
+    if (!signUpAbortController) {
+      signUpAbortController = new AbortController();
+    }
+    await signUp(signUpRequest.value, signUpAbortController?.signal);
+  } catch (err) {
+    isSignUpLoading.value = false;
+    if (err instanceof AxiosError && err.code !== 'ERR_CANCELED') {
+      throw err;
+    }
+  } finally {
+    isSignUpLoading.value = false;
+  }
+};
 const cancel = () => {
   emits('cancel');
 };
+
+watch(
+  () => signUpRequest.value.username,
+  async (newUsername) => {
+    if (!newUsername || newUsername.length <= 3) {
+      isUsernameAvailable.value = false;
+      return;
+    }
+    try {
+      isUsernameCheckLoading.value = true;
+      await debouncedUsernameChanged();
+    } catch (err) {
+      isUsernameCheckLoading.value = false;
+      if (err instanceof AxiosError && err.code !== 'ERR_CANCELED') {
+        throw err;
+      }
+    } finally {
+      isUsernameCheckLoading.value = false;
+    }
+  },
+);
 </script>
 
 <template>
-  <UCard class="w-full">
-    <section class="flex flex-col gap-y-5 w-full">
-      <div class="text-xl">Create Account</div>
-      <div class="flex items-center gap-x-5 w-full">
-        <UFormField class="" label="Username" required :error="usernameError || undefined">
-          <UInput
-            class="w-full"
-            @change="debouncedUsernameChanged"
-            v-model="signUpRequest.username"
-          ></UInput>
-        </UFormField>
-        <UIcon
-          v-if="!isUsernameAvailable && signUpRequest.username && !isUsernameCheckLoading"
-          class="text-red"
-          name="i-lucide-circle-x"
-        ></UIcon>
-        <UIcon
-          v-if="isUsernameCheckLoading"
-          class="animate-spin"
-          name="i-lucide-loader-circle"
-        ></UIcon>
-        <UIcon
-          v-if="isUsernameAvailable && signUpRequest.username && !isUsernameCheckLoading"
-          class="text-green-500"
-          name="i-lucide-badge-check"
-        ></UIcon>
-      </div>
-      <UFormField label="Email" required :error="emailError || undefined">
-        <UInput v-model="signUpRequest.email"></UInput>
-      </UFormField>
-      <UFormField label="Password" required :error="passwordError || undefined">
-        <UInput v-model="signUpRequest.password"></UInput>
-      </UFormField>
-      <UFormField label="Confirm Password" required :error="confirmPasswordError || undefined">
-        <UInput v-model="signUpRequest.confirmPassword"></UInput>
-      </UFormField>
-      <section class="flex justify-between gap-x-5">
-        <UButton class="w-full justify-center" @click="createAccount" icon="i-lucide-user-plus"
-          >Create Account</UButton
-        >
-        <UButton color="error" class="w-full justify-center" @click="cancel" icon="i-lucide-x"
-          >Cancel</UButton
-        >
-      </section>
+  <section class="flex flex-col gap-y-5">
+    <UFormField class="w-full" label="Username" required :error="usernameError || undefined">
+      <UInput class="w-full" v-model="signUpRequest.username">
+        <template #trailing>
+          <UIcon
+            v-if="isUsernameCheckLoading"
+            class="animate-spin text-blue-500"
+            name="i-lucide-loader-circle"
+          />
+          <UIcon v-else-if="!signUpRequest.username" class="text-gray-400" name="i-lucide-user" />
+          <UIcon v-else-if="!isUsernameAvailable" class="text-red-500" name="i-lucide-circle-x" />
+          <UIcon
+            v-else-if="isUsernameAvailable"
+            class="text-green-500"
+            name="i-lucide-badge-check"
+          />
+        </template>
+      </UInput>
+    </UFormField>
+    <UFormField class="w-full" label="Email" required :error="emailError || undefined">
+      <UInput class="w-full" v-model="signUpRequest.email"></UInput>
+    </UFormField>
+    <UFormField class="w-full" label="Password" required :error="passwordError || undefined">
+      <UInput class="w-full" type="password" v-model="signUpRequest.password"></UInput>
+    </UFormField>
+    <UFormField
+      class="w-full"
+      label="Confirm Password"
+      required
+      :error="confirmPasswordError || undefined"
+    >
+      <UInput class="w-full" type="password" v-model="signUpRequest.confirmPassword"></UInput>
+    </UFormField>
+    <section class="flex justify-between gap-x-5">
+      <UButton
+        :loading="isSignUpLoading"
+        class="w-full justify-center"
+        @click="createAccount"
+        icon="i-lucide-user-plus"
+        >Create Account</UButton
+      >
+      <UButton color="error" class="w-full justify-center" @click="cancel" icon="i-lucide-x"
+        >Cancel</UButton
+      >
     </section>
-  </UCard>
+  </section>
 </template>
 
 <style lang="css" scoped></style>

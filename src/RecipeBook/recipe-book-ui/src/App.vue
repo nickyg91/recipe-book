@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { AxiosError } from 'axios';
-import { onErrorCaptured, onMounted } from 'vue';
+import { onErrorCaptured } from 'vue';
 import { RouterView } from 'vue-router';
 
 const toast = useToast();
@@ -10,7 +10,7 @@ const toast = useToast();
 
 onErrorCaptured((err) => {
   if (err instanceof AxiosError) {
-    if (err.code !== 'CANCELED') {
+    if (err.code !== 'ERR_CANCELED') {
       toast.add({
         title: 'An error occurred',
         description: err.message,
@@ -25,8 +25,6 @@ onErrorCaptured((err) => {
     });
   }
 });
-
-onMounted(() => {});
 </script>
 
 <template>

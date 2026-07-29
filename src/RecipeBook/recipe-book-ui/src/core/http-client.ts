@@ -1,4 +1,4 @@
-import axios, { type AxiosRequestConfig } from 'axios';
+import axios, { type AxiosRequestConfig, type AxiosResponse } from 'axios';
 import type { IJwt } from './models/IJwtToken';
 const axiosInstance = axios.create({
   baseURL: import.meta.env.VITE_API_URL,
@@ -69,32 +69,38 @@ axiosInstance.interceptors.response.use(
 );
 
 export const useHttpClient = () => {
-  const get = async <T>(url: string, axiosConfig?: AxiosRequestConfig): Promise<T> => {
+  const get = async <T>(
+    url: string,
+    axiosConfig?: AxiosRequestConfig,
+  ): Promise<AxiosResponse<T>> => {
     const result = await axiosInstance.get<T>(url, axiosConfig);
-    return result.data;
+    return result;
   };
 
   const put = async <T>(
     url: string,
     payload?: unknown,
     axiosConfig?: AxiosRequestConfig,
-  ): Promise<T> => {
+  ): Promise<AxiosResponse<T>> => {
     const result = await axiosInstance.put<T>(url, payload, axiosConfig);
-    return result.data;
+    return result;
   };
 
   const post = async <T>(
     url: string,
     payload: unknown,
     axiosConfig?: AxiosRequestConfig,
-  ): Promise<T> => {
+  ): Promise<AxiosResponse<T>> => {
     const result = await axiosInstance.post<T>(url, payload, axiosConfig);
-    return result.data;
+    return result;
   };
 
-  const del = async <T>(url: string, axiosConfig?: AxiosRequestConfig): Promise<T> => {
+  const del = async <T>(
+    url: string,
+    axiosConfig?: AxiosRequestConfig,
+  ): Promise<AxiosResponse<T>> => {
     const result = await axiosInstance.delete<T>(url, axiosConfig);
-    return result.data;
+    return result;
   };
 
   const httpClient = {

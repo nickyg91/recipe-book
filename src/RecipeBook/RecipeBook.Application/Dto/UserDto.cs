@@ -9,7 +9,7 @@ public record UserDto
     public required string Username { get; init; }
     [EmailAddress]
     public required string Email { get; init; }
-    [RegularExpression(@"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$")]
+    [RegularExpression(@"^^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&]).{8,}$$")]
     public string? Password { get; init; }
     public Guid Uuid { get; init; }
 }

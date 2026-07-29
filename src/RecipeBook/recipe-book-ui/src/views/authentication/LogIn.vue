@@ -15,13 +15,18 @@ const showCreateDialog = ref<boolean>(false);
         <p class="text-lg opacity-90">Discover. Cook. Share.</p>
       </div>
     </div>
-    <div class="flex items-center justify-center w-full p-8">
-      <LoginForm @createClicked="showCreateDialog = true" />
+    <div class="flex items-center justify-center w-1/2 p-8">
+      <UCard class="w-full">
+        <div class="flex flex-col gap-y-5">
+          <LoginForm />
+          <ULink @click="showCreateDialog = true">Sign up</ULink>
+        </div>
+        <UModal title="Create Account" v-model:open="showCreateDialog">
+          <template #body>
+            <SignUpForm @cancel="showCreateDialog = false"></SignUpForm>
+          </template>
+        </UModal>
+      </UCard>
     </div>
-    <UModal v-model:open="showCreateDialog">
-      <template #content>
-        <SignUpForm @cancel="showCreateDialog = false"></SignUpForm>
-      </template>
-    </UModal>
   </section>
 </template>

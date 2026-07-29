@@ -1,4 +1,5 @@
 using System.Security.Claims;
+using Microsoft.AspNetCore.Mvc;
 using RecipeBook.Api.Models;
 using RecipeBook.Application.Dto;
 using RecipeBook.Application.Exceptions;
@@ -96,7 +97,7 @@ public static class UserEndpoints
             return Results.Ok(user);
         }).RequireAuthorization();
 
-        group.MapPost("username-available", async (string username, IUserService userService, CancellationToken cancellationToken) =>
+        group.MapGet("username-available/{username}", async (string username, IUserService userService, CancellationToken cancellationToken) =>
         {
             bool isUsernameTaken = await userService.IsUsernameTakenAsync(username, cancellationToken);
             return Results.Ok(isUsernameTaken);
