@@ -43,7 +43,7 @@ watch(
 </script>
 
 <template>
-  <section class="flex flex-col items-center gap-y-5 min-h-screen">
+  <section class="flex flex-col items-center justify-center gap-y-5 min-h-screen">
     <p class="text-5xl">Thanks for confirming your account!</p>
     <div v-if="isLoading">
       <UIcon name="i-lucide-loader-circle" class="text-blue-600 text-8xl animate-spin"></UIcon>

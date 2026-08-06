@@ -47,25 +47,13 @@ const { r$: signUpForm$ } = useRegle(signUpRequest, {
   },
 });
 
-const emailError = computed(() => {
-  if (!signUpForm$.email.$dirty) return '';
-  return signUpForm$.email?.$errors[0] || '';
-});
+const getError = (field: { $dirty: boolean; $errors?: string[] }) =>
+  computed(() => (!field.$dirty ? '' : field.$errors?.[0] ?? ''));
 
-const passwordError = computed(() => {
-  if (!signUpForm$.password.$dirty) return '';
-  return signUpForm$.password?.$errors?.[0] || '';
-});
-
-const usernameError = computed(() => {
-  if (!signUpForm$.username.$dirty) return '';
-  return signUpForm$.username?.$errors[0] || '';
-});
-
-const confirmPasswordError = computed(() => {
-  if (!signUpForm$.confirmPassword.$dirty) return '';
-  return signUpForm$.confirmPassword?.$errors[0] || '';
-});
+const emailError = getError(signUpForm$.email);
+const passwordError = getError(signUpForm$.password);
+const usernameError = getError(signUpForm$.username);
+const confirmPasswordError = getError(signUpForm$.confirmPassword);
 
 const debouncedUsernameChanged = useDebounceFn(async () => {
   if (signUpRequest.value.username.length > 3) {

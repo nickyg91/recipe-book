@@ -102,5 +102,30 @@ public static class UserEndpoints
             bool isUsernameTaken = await userService.IsUsernameTakenAsync(username, cancellationToken);
             return Results.Ok(isUsernameTaken);
         });
+
+        group.MapPost("forgot-password", async (ForgotPasswordRequest request, CancellationToken cancellationToken, IUserService userService) =>
+        {
+            await userService.RequestPasswordResetAsync(request.Email, cancellationToken);
+            return Results.Ok();
+        });
+
+        group.MapPost("reset-password", async (ResetPasswordRequest request, CancellationToken cancellationToken, IUserService userService, ILogger<IUserService> logger) =>
+        {
+            try
+            {
+                if (request.Password != request.ConfirmPassword)
+                {
+                    return Results.BadRequest("Passwords do not match.");
+                }
+
+                await userService.ResetPasswordAsync(request.Token, request.Password, cancellationToken);
+                return Results.Ok();
+            }
+            catch (InvalidTokenException e)
+            {
+                logger.LogError(e, "{message}", e.Message);
+                return Results.NotFound("Reset token is invalid or has expired.");
+            }
+        });
     }
 }

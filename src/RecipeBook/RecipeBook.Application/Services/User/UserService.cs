@@ -7,13 +7,15 @@ using RecipeBook.Application.Mappers;
 using RecipeBook.Application.Security;
 using RecipeBook.Application.Services.Email;
 using RecipeBook.Domain.Entities.Users;
+using RecipeBook.Infrastructure.Cache;
 using RecipeBook.Infrastructure.Database.Context.RecipeBook;
 
 namespace RecipeBook.Application.Services.User;
 
 internal sealed class UserService(
-    RecipeBookDbContext dbContext, 
+    RecipeBookDbContext dbContext,
     IEmailService emailService,
+    IRedisCache redisCache,
     [FromKeyedServices("frontendUrl")] string frontendUrl) : IUserService
 {
     private readonly UserDtoMapper _mapper = new();
@@ -89,5 +91,48 @@ internal sealed class UserService(
     private async Task<bool> IsEmailTakenAsync(string email, CancellationToken cancellationToken)
     {
         return await dbContext.Users.AnyAsync(x => x.Email == email, cancellationToken);
+    }
+
+    public async Task RequestPasswordResetAsync(string email, CancellationToken cancellationToken)
+    {
+        UserEntity? user = await dbContext.Users.FirstOrDefaultAsync(x => x.Email == email, cancellationToken);
+
+        if (user == null)
+        {
+            return;
+        }
+
+        Guid token = Guid.NewGuid();
+        string key = $"password-reset:{token}";
+        await redisCache.SetAsync(key, user.Uuid.ToString(), 60);
+
+        string body = $"""<!DOCTYPE html><html><body>Please reset your password by clicking the following <a href="{frontendUrl}reset-password/{token}">link.</a></body></html>""";
+
+        MailMessage message = new("no-reply@recipebook.nickganter.dev", email, "Reset Password", body);
+        message.To.Add(email);
+        message.IsBodyHtml = true;
+        await emailService.SendEmail(message);
+    }
+
+    public async Task ResetPasswordAsync(Guid token, string newPassword, CancellationToken cancellationToken)
+    {
+        string? uuidString = await redisCache.GetAsync<string>($"password-reset:{token}");
+
+        if (uuidString == null)
+        {
+            throw new InvalidTokenException("The password reset token is invalid or has expired.");
+        }
+
+        Guid uuid = Guid.Parse(uuidString);
+        UserEntity? user = await dbContext.Users.FirstOrDefaultAsync(x => x.Uuid == uuid, cancellationToken);
+
+        if (user == null)
+        {
+            throw new InvalidTokenException("The password reset token is invalid or has expired.");
+        }
+
+        user.Password = PasswordHasher.HashPassword(newPassword);
+        await redisCache.RemoveAsync($"password-reset:{token}");
+        await dbContext.SaveChangesAsync(cancellationToken);
     }
 }
