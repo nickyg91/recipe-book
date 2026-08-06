@@ -50,3 +50,17 @@ export const confirmAccount = async (emailConfirmationToken: string, abortSignal
     signal: abortSignal,
   });
 };
+
+export const requestPasswordReset = async (request: { email: string }, abortSignal?: AbortSignal): Promise<void> => {
+  const httpClient = useHttpClient();
+  await httpClient.post<void>('users/forgot-password', request, {
+    signal: abortSignal,
+  });
+};
+
+export const resetPassword = async (token: string, password: string, confirmPassword: string, abortSignal?: AbortSignal): Promise<void> => {
+  const httpClient = useHttpClient();
+  await httpClient.post<void>('users/reset-password', { token, password, confirmPassword }, {
+    signal: abortSignal,
+  });
+};

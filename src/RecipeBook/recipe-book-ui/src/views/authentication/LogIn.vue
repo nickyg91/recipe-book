@@ -19,7 +19,10 @@ const showCreateDialog = ref<boolean>(false);
       <UCard class="w-full">
         <div class="flex flex-col gap-y-5">
           <LoginForm />
-          <ULink @click="showCreateDialog = true">Sign up</ULink>
+          <div class="flex justify-between text-sm">
+            <ULink to="/forgot-password">Forgot your password?</ULink>
+            <ULink @click="showCreateDialog = true">Sign up</ULink>
+          </div>
         </div>
         <UModal title="Create Account" v-model:open="showCreateDialog">
           <template #body>

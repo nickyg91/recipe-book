@@ -45,7 +45,7 @@ axiosInstance.interceptors.response.use(
       }
 
       try {
-        const response = await axiosInstance.put<IJwt>(`/api/users/token/${refreshToken}/refresh`);
+        const response = await axiosInstance.put<IJwt>(`/users/token/${refreshToken}/refresh`);
 
         // Save new tokens
         localStorage.setItem('access_token', response.data.accessToken);
