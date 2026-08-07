@@ -5,9 +5,11 @@ import { useRegle } from '@regle/core';
 import { required, withMessage } from '@regle/rules';
 import { AxiosError } from 'axios';
 import { ref, computed } from 'vue';
+import { useRouter } from 'vue-router';
 
 const userStore = useUserStore();
 const isLoading = ref(false);
+const router = useRouter();
 
 const errorMessage = ref<string | undefined>();
 const credentials = ref<ILogInRequest>({
@@ -44,10 +46,11 @@ const onSubmitClicked = async () => {
   isLoading.value = true;
   try {
     await userStore.logIn(credentials.value);
+    await router.push({ name: 'Home' });
   } catch (err) {
     isLoading.value = false;
     if (err instanceof AxiosError) {
-      errorMessage.value = err.response?.data;
+      errorMessage.value = err.response?.data?.title ?? err.response?.data?.message;
     } else {
       throw err;
     }

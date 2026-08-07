@@ -48,11 +48,11 @@ axiosInstance.interceptors.response.use(
         const response = await axiosInstance.put<IJwt>(`/users/token/${refreshToken}/refresh`);
 
         // Save new tokens
-        localStorage.setItem('access_token', response.data.accessToken);
+        localStorage.setItem('access_token', response.data.token);
         localStorage.setItem('refresh_token', response.data.refreshToken);
 
         // Retry original request with new token
-        originalRequest.headers.Authorization = `Bearer ${response.data.accessToken}`;
+        originalRequest.headers.Authorization = `Bearer ${response.data.token}`;
         originalRequest.headers['X-Retried'] = 'true';
 
         return axiosInstance(originalRequest);

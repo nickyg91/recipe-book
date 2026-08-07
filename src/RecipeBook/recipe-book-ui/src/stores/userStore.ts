@@ -11,7 +11,7 @@ export const useUserStore = defineStore('userStore', () => {
 
   const logIn = async (request: ILogInRequest, abortSignal?: AbortSignal) => {
     const jwt = await authenticate(request, abortSignal);
-    localStorage.setItem('access_token', jwt.accessToken);
+    localStorage.setItem('access_token', jwt.token);
     localStorage.setItem('refresh_token', jwt.refreshToken);
     token.value = jwt;
     currentlyLoggedInUser.value = await getCurrentUser(abortSignal);
@@ -22,7 +22,7 @@ export const useUserStore = defineStore('userStore', () => {
     const refreshToken = localStorage.getItem('refresh_token');
 
     if (accessToken && refreshToken) {
-      token.value = { accessToken, refreshToken };
+      token.value = { token: accessToken, refreshToken };
       currentlyLoggedInUser.value = await getCurrentUser();
     }
   };

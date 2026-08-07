@@ -16,12 +16,15 @@ export default defineConfig({
         colors: {
           primary: 'emerald',
           secondary: 'orange',
-          neutral: 'slate'
-        }
-      }
+          neutral: 'slate',
+        },
+      },
     }),
-    tailwindcss()
+    tailwindcss(),
   ],
+  build: {
+    sourcemap: true,
+  },
   resolve: {
     alias: {
       '@': fileURLToPath(new URL('./src', import.meta.url)),

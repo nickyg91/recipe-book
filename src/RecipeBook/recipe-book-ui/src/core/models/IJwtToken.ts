@@ -1,4 +1,4 @@
 export interface IJwt {
-  accessToken: string;
+  token: string;
   refreshToken: string;
 }

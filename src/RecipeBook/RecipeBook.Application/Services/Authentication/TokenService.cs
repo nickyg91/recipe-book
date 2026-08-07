@@ -16,7 +16,7 @@ namespace RecipeBook.Application.Services.Authentication
         public JwtToken CreateToken(UserDto user)
         {
             var tokenHandler = new JsonWebTokenHandler();
-            byte[] key = Encoding.ASCII.GetBytes(settings.Secret);
+            byte[] key = Encoding.UTF8.GetBytes(settings.Secret);
 
             var tokenDescriptor = new SecurityTokenDescriptor
             {
