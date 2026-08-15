@@ -1,10 +1,12 @@
 using System.Security.Claims;
 using Microsoft.AspNetCore.Mvc;
 using RecipeBook.Api.Models;
-using RecipeBook.Application.Dto;
 using RecipeBook.Application.Exceptions;
 using RecipeBook.Application.Services.Authentication;
 using RecipeBook.Application.Services.User;
+using RecipeBook.Domain.Authentication;
+using RecipeBook.Domain.Dto;
+using RecipeBook.Domain.User;
 
 namespace RecipeBook.Api.Endpoints;
 

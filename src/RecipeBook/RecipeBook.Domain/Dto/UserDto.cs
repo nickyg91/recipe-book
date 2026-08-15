@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace RecipeBook.Application.Dto;
+namespace RecipeBook.Domain.Dto;
 
 public record UserDto
 {

@@ -1,12 +1,14 @@
 using System.Net.Mail;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using RecipeBook.Application.Dto;
 using RecipeBook.Application.Exceptions;
 using RecipeBook.Application.Mappers;
 using RecipeBook.Application.Security;
 using RecipeBook.Application.Services.Email;
+using RecipeBook.Domain.Dto;
+using RecipeBook.Domain.Email;
 using RecipeBook.Domain.Entities.Users;
+using RecipeBook.Domain.User;
 using RecipeBook.Infrastructure.Cache;
 using RecipeBook.Infrastructure.Database.Context.RecipeBook;
 

@@ -1,6 +1,6 @@
 using System.Net.Mail;
 
-namespace RecipeBook.Application.Services.Email;
+namespace RecipeBook.Domain.Email;
 
 public interface IEmailService
 {

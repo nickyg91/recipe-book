@@ -36,9 +36,9 @@ TokenSettings tokenSettings = new()
     Audience = tokenAudience
 };
 
+
+builder.Services.AddApplicationServices();
 builder.Services.AddSingleton(tokenSettings);
-builder.Services.AddScoped<IEmailService, EmailService>();
-builder.Services.AddTokenService();
 builder.Services.AddLogging();
 builder.Services.AddRedisCache(redisConnectionString);
 
@@ -68,8 +68,6 @@ string frontendUrl = builder.Configuration["FrontendUrl"] ?? throw new ArgumentE
 
 builder.Services.AddKeyedSingleton("frontendUrl", frontendUrl);
 builder.Services.AddSingleton(smtpSettings);
-
-builder.Services.AddUserServices();
 
 builder.AddNpgsqlDbContext<RecipeBookDbContext>("RecipeBook");
 builder.Services.AddCors();

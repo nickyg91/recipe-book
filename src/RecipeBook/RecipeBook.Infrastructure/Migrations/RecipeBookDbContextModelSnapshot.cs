@@ -48,10 +48,20 @@ namespace RecipeBook.Infrastructure.Migrations
                         .HasColumnType("integer")
                         .HasColumnName("user_id");
 
+                    b.Property<Guid>("Uuid")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasColumnName("uuid")
+                        .HasDefaultValueSql("uuidv4()");
+
                     b.HasKey("Id")
                         .HasName("pk_recipe_book_id");
 
                     b.HasIndex("UserId");
+
+                    b.HasIndex("Uuid")
+                        .IsUnique()
+                        .HasDatabaseName("ix_recipe_book_uuid");
 
                     b.ToTable("recipe_book", (string)null);
                 });

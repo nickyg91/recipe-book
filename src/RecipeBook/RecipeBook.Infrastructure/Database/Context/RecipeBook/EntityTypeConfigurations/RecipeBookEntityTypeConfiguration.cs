@@ -19,11 +19,20 @@ public class RecipeBookEntityTypeConfiguration : BaseEntityTypeConfiguration<Rec
         builder.Property(x => x.UserId)
             .HasColumnName("user_id");
 
+        builder.Property(x => x.Uuid)
+            .HasColumnName("uuid")
+            .HasDefaultValueSql("uuidv4()");
+        
         builder
             .HasMany(x => x.Recipes)
             .WithOne(x => x.RecipeBook)
             .HasConstraintName("fk_recipe_book_recipe");
 
+        builder
+            .HasIndex(x => x.Uuid)
+            .IsUnique()
+            .HasDatabaseName("ix_recipe_book_uuid");
+        
         base.Configure(builder);
     }
 }

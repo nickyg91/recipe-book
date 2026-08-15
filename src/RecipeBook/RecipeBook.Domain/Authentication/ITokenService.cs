@@ -1,6 +1,6 @@
-using RecipeBook.Application.Dto;
+using RecipeBook.Domain.Dto;
 
-namespace RecipeBook.Application.Services.Authentication;
+namespace RecipeBook.Domain.Authentication;
 
 public interface ITokenService
 {

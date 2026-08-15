@@ -7,7 +7,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace RecipeBook.Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialScaffold : Migration
+    public partial class Scaffold : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -21,7 +21,9 @@ namespace RecipeBook.Infrastructure.Migrations
                     user_name = table.Column<string>(type: "character varying(128)", maxLength: 128, nullable: false),
                     password = table.Column<string>(type: "character varying(512)", maxLength: 512, nullable: false),
                     email = table.Column<string>(type: "character varying(312)", maxLength: 312, nullable: false),
-                    date_of_birth = table.Column<DateOnly>(type: "date", nullable: true),
+                    is_email_confirmed = table.Column<bool>(type: "boolean", nullable: false),
+                    email_confirmation_token = table.Column<Guid>(type: "uuid", nullable: true),
+                    uuid = table.Column<Guid>(type: "uuid", nullable: false),
                     created_at_utc = table.Column<DateTime>(type: "timestamp with time zone", nullable: false, defaultValueSql: "timezone('utc', now())")
                 },
                 constraints: table =>
@@ -30,15 +32,37 @@ namespace RecipeBook.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "recipe_book",
+                columns: table => new
+                {
+                    id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    title = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: false),
+                    user_id = table.Column<int>(type: "integer", nullable: false),
+                    uuid = table.Column<Guid>(type: "uuid", nullable: false, defaultValueSql: "uuidv4()"),
+                    created_at_utc = table.Column<DateTime>(type: "timestamp with time zone", nullable: false, defaultValueSql: "timezone('utc', now())")
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("pk_recipe_book_id", x => x.id);
+                    table.ForeignKey(
+                        name: "fk_user_recipe_book",
+                        column: x => x.user_id,
+                        principalTable: "user",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "recipe",
                 columns: table => new
                 {
                     id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    user_id = table.Column<int>(type: "integer", nullable: false),
                     name = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: false),
                     description = table.Column<string>(type: "character varying(512)", maxLength: 512, nullable: false),
                     estimated_time = table.Column<short>(type: "smallint", nullable: false),
+                    RecipeBookId = table.Column<int>(type: "integer", nullable: false),
                     image = table.Column<byte[]>(type: "bytea", maxLength: 5242880, nullable: true),
                     is_private = table.Column<bool>(type: "boolean", nullable: false, defaultValueSql: "false"),
                     created_at_utc = table.Column<DateTime>(type: "timestamp with time zone", nullable: false, defaultValueSql: "timezone('utc', now())")
@@ -47,9 +71,9 @@ namespace RecipeBook.Infrastructure.Migrations
                 {
                     table.PrimaryKey("pk_recipe_id", x => x.id);
                     table.ForeignKey(
-                        name: "fk_user_recipe",
-                        column: x => x.user_id,
-                        principalTable: "user",
+                        name: "fk_recipe_book_recipe",
+                        column: x => x.RecipeBookId,
+                        principalTable: "recipe_book",
                         principalColumn: "id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -134,9 +158,20 @@ namespace RecipeBook.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_recipe_user_id",
+                name: "IX_recipe_RecipeBookId",
                 table: "recipe",
+                column: "RecipeBookId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_recipe_book_user_id",
+                table: "recipe_book",
                 column: "user_id");
+
+            migrationBuilder.CreateIndex(
+                name: "ix_recipe_book_uuid",
+                table: "recipe_book",
+                column: "uuid",
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_recipe_ingredient_recipe_id",
@@ -162,6 +197,12 @@ namespace RecipeBook.Infrastructure.Migrations
                 name: "IX_recipe_step_ingredient_recipe_step_id",
                 table: "recipe_step_ingredient",
                 column: "recipe_step_id");
+
+            migrationBuilder.CreateIndex(
+                name: "idx_user_uuid",
+                table: "user",
+                column: "uuid",
+                unique: true);
         }
 
         /// <inheritdoc />
@@ -178,6 +219,9 @@ namespace RecipeBook.Infrastructure.Migrations
 
             migrationBuilder.DropTable(
                 name: "recipe");
+
+            migrationBuilder.DropTable(
+                name: "recipe_book");
 
             migrationBuilder.DropTable(
                 name: "user");

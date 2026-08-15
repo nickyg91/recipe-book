@@ -3,7 +3,7 @@ using RecipeBook.Domain.Email;
 
 namespace RecipeBook.Application.Services.Email;
 
-public class EmailService(SmtpSettings settings) : IEmailService
+internal sealed class EmailService(SmtpSettings settings) : IEmailService
 {
     public async Task SendEmail(MailMessage mailMessage)
     {

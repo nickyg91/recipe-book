@@ -6,6 +6,7 @@ public class RecipeBookEntity : BaseEntity
 {
     public required string Title { get; set; }
     public int UserId { get; set; }
+    public Guid Uuid { get; set; } = Guid.NewGuid();
     public UserEntity? User { get; set; }
     public HashSet<RecipeEntity> Recipes { get; set; } = [];
 }

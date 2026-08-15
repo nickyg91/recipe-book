@@ -2,13 +2,13 @@ using System.Security.Claims;
 using System.Text;
 using Microsoft.IdentityModel.JsonWebTokens;
 using Microsoft.IdentityModel.Tokens;
-using RecipeBook.Application.Dto;
 using RecipeBook.Domain.Authentication;
+using RecipeBook.Domain.Dto;
 using RecipeBook.Infrastructure.Cache;
 
 namespace RecipeBook.Application.Services.Authentication
 {
-    public class TokenService(TokenSettings settings, IRedisCache cache) : ITokenService
+    internal sealed class TokenService(TokenSettings settings, IRedisCache cache) : ITokenService
     {
         private const int AccessTokenMinutes = 60; // 1 hour
         private const int RefreshTokenMinutes = 24 * 60; // 24 hours

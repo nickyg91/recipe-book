@@ -1,5 +1,5 @@
 using RecipeBook.Api.Models;
-using RecipeBook.Application.Dto;
+using RecipeBook.Domain.Dto;
 using Riok.Mapperly.Abstractions;
 
 namespace RecipeBook.Api.Mappers;

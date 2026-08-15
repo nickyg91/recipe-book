@@ -1,4 +1,4 @@
-using RecipeBook.Application.Dto;
+using RecipeBook.Domain.Dto;
 using RecipeBook.Domain.Entities;
 using RecipeBook.Domain.Entities.Users;
 using Riok.Mapperly.Abstractions;

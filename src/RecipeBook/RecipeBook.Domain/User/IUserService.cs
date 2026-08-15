@@ -1,6 +1,6 @@
-using RecipeBook.Application.Dto;
+using RecipeBook.Domain.Dto;
 
-namespace RecipeBook.Application.Services.User;
+namespace RecipeBook.Domain.User;
 
 public interface IUserService
 {
