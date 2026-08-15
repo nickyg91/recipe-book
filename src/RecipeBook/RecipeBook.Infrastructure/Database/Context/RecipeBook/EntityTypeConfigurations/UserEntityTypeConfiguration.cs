@@ -42,9 +42,9 @@ public class UserEntityTypeConfiguration : BaseEntityTypeConfiguration<UserEntit
             .HasDatabaseName("idx_user_uuid");
         
         builder
-            .HasMany(x => x.Recipes)
+            .HasMany(x => x.RecipeBooks)
             .WithOne(x => x.User)
-            .HasConstraintName("fk_user_recipe");
+            .HasConstraintName("fk_user_recipe_book");
         
         base.Configure(builder);
     }

@@ -8,12 +8,12 @@ namespace RecipeBook.Application.Mappers;
 [Mapper(ThrowOnMappingNullMismatch = false)]
 internal partial class UserDtoMapper
 {
-    [MapperIgnoreSource(nameof(UserEntity.Recipes))]
+    [MapperIgnoreSource(nameof(UserEntity.RecipeBooks))]
     [MapperIgnoreSource(nameof(UserEntity.CreatedAtUtc))]
     [MapperIgnoreTarget(nameof(UserEntity.Password))]
     public partial UserDto ToUserDto(UserEntity user);
     
-    [MapperIgnoreTarget(nameof(UserEntity.Recipes))]
+    [MapperIgnoreTarget(nameof(UserEntity.RecipeBooks))]
     [MapperIgnoreTarget(nameof(UserEntity.CreatedAtUtc))]
     public partial UserEntity ToUserEntity(UserDto userDto);
 }

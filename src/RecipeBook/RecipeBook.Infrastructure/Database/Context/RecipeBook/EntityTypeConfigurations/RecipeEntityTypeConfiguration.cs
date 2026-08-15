@@ -1,4 +1,3 @@
-
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using RecipeBook.Domain.Entities;
@@ -22,10 +21,6 @@ public class RecipeEntityTypeConfiguration : BaseEntityTypeConfiguration<RecipeE
             .IsUnicode()
             .HasColumnName("description")
             .HasMaxLength(512);
-
-        builder.Property(x => x.UserId)
-            .HasColumnName("user_id")
-            .IsRequired();
         
         builder.Property(x => x.EstimatedTime)
             .IsRequired()
@@ -40,12 +35,6 @@ public class RecipeEntityTypeConfiguration : BaseEntityTypeConfiguration<RecipeE
         builder.Property(x => x.IsPrivate)
             .HasDefaultValueSql("false")
             .HasColumnName("is_private");
-        
-        builder
-            .HasOne(x => x.User)
-            .WithMany(x => x.Recipes)
-            .HasForeignKey(x => x.UserId)
-            .HasConstraintName("fk_recipe_user");
 
         builder.HasMany(x => x.RecipeSteps)
             .WithOne(x => x.Recipe)
