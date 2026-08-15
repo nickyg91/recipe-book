@@ -1,13 +1,14 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using RecipeBook.Domain.Entities;
+using RecipeBook.Domain.Entities.Recipes;
 
 namespace RecipeBook.Infrastructure.Database.Context.RecipeBook.EntityTypeConfigurations;
 
-public class RecipeStepIngredientEntityTypeConfiguration : BaseEntityTypeConfiguration<RecipeStepIngredient>
+public class RecipeStepIngredientEntityTypeConfiguration : BaseEntityTypeConfiguration<RecipeStepIngredientEntity>
 {
     protected override string TableName => "recipe_step_ingredient";
-    public override void Configure(EntityTypeBuilder<RecipeStepIngredient> builder)
+    public override void Configure(EntityTypeBuilder<RecipeStepIngredientEntity> builder)
     {
         builder.Property(x => x.RecipeId)
             .HasColumnName("recipe_id");

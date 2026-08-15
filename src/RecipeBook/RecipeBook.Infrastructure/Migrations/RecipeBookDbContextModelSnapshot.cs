@@ -17,12 +17,12 @@ namespace RecipeBook.Infrastructure.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "10.0.1")
+                .HasAnnotation("ProductVersion", "10.0.10")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("RecipeBook.Domain.Entities.Recipe", b =>
+            modelBuilder.Entity("RecipeBook.Domain.Entities.Recipes.RecipeEntity", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -78,7 +78,7 @@ namespace RecipeBook.Infrastructure.Migrations
                     b.ToTable("recipe", (string)null);
                 });
 
-            modelBuilder.Entity("RecipeBook.Domain.Entities.RecipeIngredient", b =>
+            modelBuilder.Entity("RecipeBook.Domain.Entities.Recipes.RecipeIngredientEntity", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -126,7 +126,7 @@ namespace RecipeBook.Infrastructure.Migrations
                     b.ToTable("recipe_ingredient", (string)null);
                 });
 
-            modelBuilder.Entity("RecipeBook.Domain.Entities.RecipeStep", b =>
+            modelBuilder.Entity("RecipeBook.Domain.Entities.Recipes.RecipeStepEntity", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -160,7 +160,7 @@ namespace RecipeBook.Infrastructure.Migrations
                     b.ToTable("recipe_step", (string)null);
                 });
 
-            modelBuilder.Entity("RecipeBook.Domain.Entities.RecipeStepIngredient", b =>
+            modelBuilder.Entity("RecipeBook.Domain.Entities.Recipes.RecipeStepIngredientEntity", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -199,7 +199,7 @@ namespace RecipeBook.Infrastructure.Migrations
                     b.ToTable("recipe_step_ingredient", (string)null);
                 });
 
-            modelBuilder.Entity("RecipeBook.Domain.Entities.User", b =>
+            modelBuilder.Entity("RecipeBook.Domain.Entities.Users.UserEntity", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -214,15 +214,19 @@ namespace RecipeBook.Infrastructure.Migrations
                         .HasColumnName("created_at_utc")
                         .HasDefaultValueSql("timezone('utc', now())");
 
-                    b.Property<DateOnly?>("DateOfBirth")
-                        .HasColumnType("date")
-                        .HasColumnName("date_of_birth");
-
                     b.Property<string>("Email")
                         .IsRequired()
                         .HasMaxLength(312)
                         .HasColumnType("character varying(312)")
                         .HasColumnName("email");
+
+                    b.Property<Guid?>("EmailConfirmationToken")
+                        .HasColumnType("uuid")
+                        .HasColumnName("email_confirmation_token");
+
+                    b.Property<bool>("IsEmailConfirmed")
+                        .HasColumnType("boolean")
+                        .HasColumnName("is_email_confirmed");
 
                     b.Property<string>("Password")
                         .IsRequired()
@@ -237,15 +241,23 @@ namespace RecipeBook.Infrastructure.Migrations
                         .HasColumnType("character varying(128)")
                         .HasColumnName("user_name");
 
+                    b.Property<Guid>("Uuid")
+                        .HasColumnType("uuid")
+                        .HasColumnName("uuid");
+
                     b.HasKey("Id")
                         .HasName("pk_user_id");
+
+                    b.HasIndex("Uuid")
+                        .IsUnique()
+                        .HasDatabaseName("idx_user_uuid");
 
                     b.ToTable("user", (string)null);
                 });
 
-            modelBuilder.Entity("RecipeBook.Domain.Entities.Recipe", b =>
+            modelBuilder.Entity("RecipeBook.Domain.Entities.Recipes.RecipeEntity", b =>
                 {
-                    b.HasOne("RecipeBook.Domain.Entities.User", "User")
+                    b.HasOne("RecipeBook.Domain.Entities.Users.UserEntity", "User")
                         .WithMany("Recipes")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -255,9 +267,9 @@ namespace RecipeBook.Infrastructure.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("RecipeBook.Domain.Entities.RecipeIngredient", b =>
+            modelBuilder.Entity("RecipeBook.Domain.Entities.Recipes.RecipeIngredientEntity", b =>
                 {
-                    b.HasOne("RecipeBook.Domain.Entities.Recipe", "Recipe")
+                    b.HasOne("RecipeBook.Domain.Entities.Recipes.RecipeEntity", "Recipe")
                         .WithMany("RecipeIngredients")
                         .HasForeignKey("RecipeId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -267,9 +279,9 @@ namespace RecipeBook.Infrastructure.Migrations
                     b.Navigation("Recipe");
                 });
 
-            modelBuilder.Entity("RecipeBook.Domain.Entities.RecipeStep", b =>
+            modelBuilder.Entity("RecipeBook.Domain.Entities.Recipes.RecipeStepEntity", b =>
                 {
-                    b.HasOne("RecipeBook.Domain.Entities.Recipe", "Recipe")
+                    b.HasOne("RecipeBook.Domain.Entities.Recipes.RecipeEntity", "Recipe")
                         .WithMany("RecipeSteps")
                         .HasForeignKey("RecipeId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -279,21 +291,21 @@ namespace RecipeBook.Infrastructure.Migrations
                     b.Navigation("Recipe");
                 });
 
-            modelBuilder.Entity("RecipeBook.Domain.Entities.RecipeStepIngredient", b =>
+            modelBuilder.Entity("RecipeBook.Domain.Entities.Recipes.RecipeStepIngredientEntity", b =>
                 {
-                    b.HasOne("RecipeBook.Domain.Entities.RecipeIngredient", "Ingredient")
+                    b.HasOne("RecipeBook.Domain.Entities.Recipes.RecipeIngredientEntity", "Ingredient")
                         .WithMany()
                         .HasForeignKey("IngredientId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("RecipeBook.Domain.Entities.Recipe", "Recipe")
+                    b.HasOne("RecipeBook.Domain.Entities.Recipes.RecipeEntity", "Recipe")
                         .WithMany()
                         .HasForeignKey("RecipeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("RecipeBook.Domain.Entities.RecipeStep", "RecipeStep")
+                    b.HasOne("RecipeBook.Domain.Entities.Recipes.RecipeStepEntity", "RecipeStep")
                         .WithMany("RecipeStepIngredients")
                         .HasForeignKey("RecipeStepId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -307,19 +319,19 @@ namespace RecipeBook.Infrastructure.Migrations
                     b.Navigation("RecipeStep");
                 });
 
-            modelBuilder.Entity("RecipeBook.Domain.Entities.Recipe", b =>
+            modelBuilder.Entity("RecipeBook.Domain.Entities.Recipes.RecipeEntity", b =>
                 {
                     b.Navigation("RecipeIngredients");
 
                     b.Navigation("RecipeSteps");
                 });
 
-            modelBuilder.Entity("RecipeBook.Domain.Entities.RecipeStep", b =>
+            modelBuilder.Entity("RecipeBook.Domain.Entities.Recipes.RecipeStepEntity", b =>
                 {
                     b.Navigation("RecipeStepIngredients");
                 });
 
-            modelBuilder.Entity("RecipeBook.Domain.Entities.User", b =>
+            modelBuilder.Entity("RecipeBook.Domain.Entities.Users.UserEntity", b =>
                 {
                     b.Navigation("Recipes");
                 });

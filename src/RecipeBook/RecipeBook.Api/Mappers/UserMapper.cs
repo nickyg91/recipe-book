@@ -1,5 +1,5 @@
 using RecipeBook.Api.Models;
-using RecipeBook.Application.Domain.Dto;
+using RecipeBook.Application.Dto;
 using Riok.Mapperly.Abstractions;
 
 namespace RecipeBook.Api.Mappers;
@@ -8,5 +8,6 @@ namespace RecipeBook.Api.Mappers;
 public partial class UserMapper
 {
     [MapperIgnoreTarget(nameof(UserDto.Id))]
+    [MapperIgnoreTarget(nameof(UserDto.Uuid))]
     public partial UserDto ToUserDto(CreateUserRequest createUser);
 }

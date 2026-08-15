@@ -2,13 +2,14 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using RecipeBook.Domain.Entities;
+using RecipeBook.Domain.Entities.Recipes;
 
 namespace RecipeBook.Infrastructure.Database.Context.RecipeBook.EntityTypeConfigurations;
 
-public class RecipeEntityTypeConfiguration : BaseEntityTypeConfiguration<Recipe>
+public class RecipeEntityTypeConfiguration : BaseEntityTypeConfiguration<RecipeEntity>
 {
     protected override string  TableName => "recipe";
-    public override void Configure(EntityTypeBuilder<Recipe> builder)
+    public override void Configure(EntityTypeBuilder<RecipeEntity> builder)
     {
         builder.Property(x => x.Name)
             .IsRequired()

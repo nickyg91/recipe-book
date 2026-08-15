@@ -1,0 +1,10 @@
+name: Local
+variables:
+  - name: access_token
+    value: eyJhbGciOiJodHRwOi8vd3d3LnczLm9yZy8yMDAxLzA0L3htbGRzaWctbW9yZSNobWFjLXNoYTI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJodHRwczovL2xvY2FsaG9zdDo1MDAyIiwiaXNzIjoiaHR0cDovL2xvY2FsaG9zdDo1MjY2IiwiZXhwIjoxNzg1MDE4MTk4LCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1laWRlbnRpZmllciI6IjYyY2FhNGM0LTQwZjAtNDIxNi1iNGI2LTg0YjUzNmU4YTZlOCIsImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL25hbWUiOiJCaWdneW1hYyIsImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL2VtYWlsYWRkcmVzcyI6InRlc3RAdGVzdC5jb20iLCJpYXQiOjE3ODUwMTQ1OTgsIm5iZiI6MTc4NTAxNDU5OH0.j7xZEtsydGu1e1rjcpu0QNcbmc_MSKqUjaU2glswU7w
+  - name: refresh_token
+    value: 7808839e-d164-4811-af56-f9450eac9ed4
+  - name: base_url
+    value: http://localhost:5266
+  - name: confirm_guid
+    value: ""

@@ -1,5 +1,5 @@
 using Microsoft.Extensions.DependencyInjection;
-using RecipeBook.Application.Domain.Services.User;
+using RecipeBook.Application.Services.User;
 
 namespace RecipeBook.Application.Extensions;
 

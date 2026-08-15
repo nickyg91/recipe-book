@@ -1,5 +1,6 @@
-using RecipeBook.Application.Domain.Dto;
+using RecipeBook.Application.Dto;
 using RecipeBook.Domain.Entities;
+using RecipeBook.Domain.Entities.Users;
 using Riok.Mapperly.Abstractions;
 
 namespace RecipeBook.Application.Mappers;
@@ -7,11 +8,12 @@ namespace RecipeBook.Application.Mappers;
 [Mapper(ThrowOnMappingNullMismatch = false)]
 internal partial class UserDtoMapper
 {
-    [MapperIgnoreSource(nameof(User.Recipes))]
-    [MapperIgnoreSource(nameof(User.CreatedAtUtc))]
-    public partial UserDto ToUserDto(User user);
+    [MapperIgnoreSource(nameof(UserEntity.Recipes))]
+    [MapperIgnoreSource(nameof(UserEntity.CreatedAtUtc))]
+    [MapperIgnoreTarget(nameof(UserEntity.Password))]
+    public partial UserDto ToUserDto(UserEntity user);
     
-    [MapperIgnoreTarget(nameof(User.Recipes))]
-    [MapperIgnoreTarget(nameof(User.CreatedAtUtc))]
-    public partial User ToUserEntity(UserDto userDto);
+    [MapperIgnoreTarget(nameof(UserEntity.Recipes))]
+    [MapperIgnoreTarget(nameof(UserEntity.CreatedAtUtc))]
+    public partial UserEntity ToUserEntity(UserDto userDto);
 }

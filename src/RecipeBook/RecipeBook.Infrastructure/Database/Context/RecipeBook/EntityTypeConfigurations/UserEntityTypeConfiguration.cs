@@ -1,13 +1,14 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using RecipeBook.Domain.Entities;
+using RecipeBook.Domain.Entities.Users;
 
 namespace RecipeBook.Infrastructure.Database.Context.RecipeBook.EntityTypeConfigurations;
 
-public class UserEntityTypeConfiguration : BaseEntityTypeConfiguration<User>
+public class UserEntityTypeConfiguration : BaseEntityTypeConfiguration<UserEntity>
 {
     protected override string  TableName => "user";
-    public override void Configure(EntityTypeBuilder<User> builder)
+    public override void Configure(EntityTypeBuilder<UserEntity> builder)
     {
         builder.Property(u => u.Username)
             .IsRequired()
@@ -25,10 +26,21 @@ public class UserEntityTypeConfiguration : BaseEntityTypeConfiguration<User>
             .HasColumnName("password")
             .HasMaxLength(512);
 
-        builder.Property(x => x.DateOfBirth)
-            .IsRequired(false)
-            .HasColumnName("date_of_birth");
+        builder.Property(x => x.IsEmailConfirmed)
+            .HasColumnName("is_email_confirmed");
+        
+        builder.Property(x => x.EmailConfirmationToken)
+            .HasColumnName("email_confirmation_token")
+            .IsRequired(false);
 
+        builder.Property(x => x.Uuid)
+            .HasColumnName("uuid")
+            .IsRequired();
+        
+        builder.HasIndex(x => x.Uuid)
+            .IsUnique()
+            .HasDatabaseName("idx_user_uuid");
+        
         builder
             .HasMany(x => x.Recipes)
             .WithOne(x => x.User)

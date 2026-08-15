@@ -1,0 +1,32 @@
+opencollection: 1.0.0
+
+info:
+  name: Recipe Book
+  version: "1"
+config:
+  proxy:
+    inherit: true
+    config:
+      protocol: http
+      hostname: ""
+      port: ""
+      auth:
+        username: ""
+        password: ""
+      bypassProxy: ""
+
+request:
+  auth:
+    type: bearer
+    token: "{{access_token}}"
+  variables:
+    - name: access_token
+      value: eyJhbGciOiJodHRwOi8vd3d3LnczLm9yZy8yMDAxLzA0L3htbGRzaWctbW9yZSNobWFjLXNoYTI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJodHRwczovL2xvY2FsaG9zdDo1MDAyIiwiaXNzIjoiaHR0cDovL2xvY2FsaG9zdDo1MjY2IiwiZXhwIjoxNzg1MDE3Mzk1LCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1laWRlbnRpZmllciI6IjYyY2FhNGM0LTQwZjAtNDIxNi1iNGI2LTg0YjUzNmU4YTZlOCIsImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL25hbWUiOiJCaWdneW1hYyIsImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL2VtYWlsYWRkcmVzcyI6InRlc3RAdGVzdC5jb20iLCJpYXQiOjE3ODUwMTM3OTUsIm5iZiI6MTc4NTAxMzc5NX0.nYAMrlzScE6ABZ92wTohw1F2hEYFLjU1wNLENlMdKLg
+    - name: refresh_token
+      value: 381ba167-2f81-498b-93d3-83f43e39889e
+bundled: false
+extensions:
+  bruno:
+    ignore:
+      - node_modules
+      - .git
