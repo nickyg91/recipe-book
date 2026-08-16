@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { checkUsernameAvailability, signUp } from '@/core/api/user-api';
+import { checkUsernameAvailability, signUp } from '@/core/api/user.api';
 import type { ISignUpRequest } from '@/core/models/ISignUpRequest';
 import { useRegle } from '@regle/core';
 import { email, maxLength, minLength, regex, required, sameAs, withMessage } from '@regle/rules';
@@ -48,7 +48,7 @@ const { r$: signUpForm$ } = useRegle(signUpRequest, {
 });
 
 const getError = (field: { $dirty: boolean; $errors?: string[] }) =>
-  computed(() => (!field.$dirty ? '' : field.$errors?.[0] ?? ''));
+  computed(() => (!field.$dirty ? '' : (field.$errors?.[0] ?? '')));
 
 const emailError = getError(signUpForm$.email);
 const passwordError = getError(signUpForm$.password);

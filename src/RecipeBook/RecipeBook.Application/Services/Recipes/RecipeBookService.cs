@@ -1,3 +1,4 @@
+using Microsoft.EntityFrameworkCore;
 using RecipeBook.Application.Mappers;
 using RecipeBook.Domain.Dto;
 using RecipeBook.Domain.Entities.Recipes;
@@ -8,13 +9,17 @@ namespace RecipeBook.Application.Services.Recipes;
 
 internal sealed class RecipeBookService(RecipeBookDbContext dbContext) : IRecipeBookService
 {
-    private readonly RecipeBookMapper _mapper = new RecipeBookMapper();
-    public async Task<List<RecipeBookDto>> GetRecipeBooksForUser(Guid userId)
+    private readonly RecipeBookMapper _mapper = new();
+    public async Task<List<RecipeBookDto>> GetRecipeBooksForUser(Guid userId, CancellationToken cancellationToken)
     {
-        throw new NotImplementedException();
+        List<RecipeBookEntity> recipeBooks = await dbContext.RecipeBooks
+            .Include(x => x.User)
+            .Where(x => x.Uuid == userId)
+            .ToListAsync(cancellationToken);
+        return [.. recipeBooks.Select(x => _mapper.ToRecipeBookDto(x))];
     }
 
-    public async Task<RecipeBookDto> GetRecipeBook(Guid recipeBookId)
+    public async Task<RecipeBookDto> GetRecipeBook(Guid recipeBookId, CancellationToken cancellationToken)
     {
         throw new NotImplementedException();
     }

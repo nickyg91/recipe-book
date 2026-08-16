@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import type { ILogInRequest } from '@/core/models/ILogInRequest';
+import { RouteNames } from '@/router/route-names';
 import { useUserStore } from '@/stores/userStore';
 import { useRegle } from '@regle/core';
 import { required, withMessage } from '@regle/rules';
@@ -46,7 +47,7 @@ const onSubmitClicked = async () => {
   isLoading.value = true;
   try {
     await userStore.logIn(credentials.value);
-    await router.push({ name: 'Home' });
+    await router.push({ name: RouteNames.Recipes });
   } catch (err) {
     isLoading.value = false;
     if (err instanceof AxiosError) {

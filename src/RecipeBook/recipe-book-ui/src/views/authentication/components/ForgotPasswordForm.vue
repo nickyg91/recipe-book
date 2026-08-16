@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { useRegle } from '@regle/core';
 import { email, required, withMessage } from '@regle/rules';
-import { computed } from 'vue';
+import { computed, ref } from 'vue';
 
 const props = defineProps<{ isLoading: boolean }>();
 const emits = defineEmits<{ submit: [email: string] }>();
@@ -15,7 +15,7 @@ const { r$ } = useRegle(formData, {
   },
 });
 
-const emailError = computed(() => (!r$.email.$dirty ? '' : r$.$errors?.email?.[0] ?? ''));
+const emailError = computed(() => (!r$.email.$dirty ? '' : (r$.$errors?.email?.[0] ?? '')));
 
 function onSubmitClicked() {
   if (r$.$invalid || props.isLoading) return;

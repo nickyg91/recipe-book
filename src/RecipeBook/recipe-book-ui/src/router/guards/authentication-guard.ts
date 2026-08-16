@@ -5,12 +5,11 @@ export const registerAuthenticatedGuard = (router: Router) => {
   router.beforeEach((to) => {
     const userStore = useUserStore();
 
-    // Only run guard for routes that require auth
     if (to.meta.requiresAuth) {
       if (!userStore.token) {
-        return '/log-in'; // redirect unauthenticated users
+        return '/log-in';
       }
     }
-    return true; // allow navigation for all other routes
+    return true;
   });
 };

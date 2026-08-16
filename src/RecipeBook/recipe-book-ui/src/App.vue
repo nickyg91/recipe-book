@@ -4,9 +4,9 @@ import { onErrorCaptured } from 'vue';
 import { RouterView } from 'vue-router';
 
 const toast = useToast();
-// import { useUserStore } from './stores/userStore';
+import { useUserStore } from './stores/userStore';
 
-//const userStore = useUserStore();
+const userStore = useUserStore();
 
 onErrorCaptured((err) => {
   if (err instanceof AxiosError) {
@@ -30,7 +30,14 @@ onErrorCaptured((err) => {
 <template>
   <UApp>
     <UMain>
-      <RouterView />
+      <UHeader v-if="userStore.isLoggedIn">
+        <template #title> Recipe Book </template>
+      </UHeader>
+      <RouterView v-slot="{ Component }">
+        <Transiton name="fade" mode="out-in">
+          <component :is="Component"></component>
+        </Transiton>
+      </RouterView>
     </UMain>
   </UApp>
 </template>

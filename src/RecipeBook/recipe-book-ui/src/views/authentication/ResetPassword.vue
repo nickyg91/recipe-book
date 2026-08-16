@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { resetPassword } from '@/core/api/user-api';
+import { resetPassword } from '@/core/api/user.api';
 import ResetPasswordForm from './components/ResetPasswordForm.vue';
 import { ref, watch } from 'vue';
 import { useRouter } from 'vue-router';
@@ -10,17 +10,16 @@ const isLoading = ref(false);
 const isSuccessful = ref(false);
 const redirectTime = ref(5);
 
+let timer: ReturnType<typeof setInterval> | null = null;
 watch(
   () => redirectTime.value,
   (val) => {
     if (val === 0) {
-      clearInterval(timer);
+      clearInterval(timer!);
       router.push({ name: 'LogIn' });
     }
   },
 );
-
-let timer: ReturnType<typeof setInterval> | null = null;
 
 async function onSubmit(data: { password: string }) {
   isLoading.value = true;
@@ -57,7 +56,9 @@ async function onSubmit(data: { password: string }) {
         <div class="flex flex-col gap-y-5 items-center text-center">
           <UIcon name="i-lucide-check-circle" class="text-green-500 text-6xl"></UIcon>
           <h2 class="text-xl">Password Reset Successful</h2>
-          <p class="text-sm text-gray-500">You will be redirected to the login page in {{ redirectTime }} seconds.</p>
+          <p class="text-sm text-gray-500">
+            You will be redirected to the login page in {{ redirectTime }} seconds.
+          </p>
         </div>
       </UCard>
     </div>

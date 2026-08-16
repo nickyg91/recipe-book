@@ -4,7 +4,6 @@ using Microsoft.Extensions.DependencyInjection;
 using RecipeBook.Application.Exceptions;
 using RecipeBook.Application.Mappers;
 using RecipeBook.Application.Security;
-using RecipeBook.Application.Services.Email;
 using RecipeBook.Domain.Dto;
 using RecipeBook.Domain.Email;
 using RecipeBook.Domain.Entities.Users;

@@ -3,7 +3,6 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using RecipeBook.Api.Endpoints;
 using RecipeBook.Application.Extensions;
-using RecipeBook.Application.Services.Email;
 using RecipeBook.Domain.Authentication;
 using RecipeBook.Domain.Email;
 using RecipeBook.Infrastructure.Database.Context.RecipeBook;
@@ -37,10 +36,10 @@ TokenSettings tokenSettings = new()
 };
 
 
-builder.Services.AddApplicationServices();
 builder.Services.AddSingleton(tokenSettings);
 builder.Services.AddLogging();
 builder.Services.AddRedisCache(redisConnectionString);
+builder.Services.AddApplicationServices();
 
 builder.Services.AddAuthentication(opt =>
 {
@@ -60,6 +59,14 @@ builder.Services.AddAuthentication(opt =>
     };
 });
 
+builder.Services.AddHttpContextAccessor();
+
+builder.Services.AddScoped<IAuthenticatedUser, AuthenticatedUser>(provider =>
+{
+    var httpContextAccessor = provider.GetRequiredService<IHttpContextAccessor>();
+    return new AuthenticatedUser(httpContextAccessor.HttpContext!.User!);
+});
+
 builder.Services.AddAuthorization();
 builder.Services.AddValidation();
 SmtpSettings smtpSettings = builder.Configuration.GetSection("SmtpSettings").Get<SmtpSettings>() ?? throw new ArgumentException("SmtpSettings is not set");
@@ -73,7 +80,6 @@ builder.AddNpgsqlDbContext<RecipeBookDbContext>("RecipeBook");
 builder.Services.AddCors();
 
 WebApplication app = builder.Build();
-
 
 if (builder.Environment.IsDevelopment())
 {
@@ -99,5 +105,6 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapUserEndpoints();
+app.MapRecipeBookEndpoints();
 
 app.Run();
