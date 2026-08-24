@@ -19,6 +19,6 @@ public static class RecipeBookEndpoints
             => await recipeBookService.GetRecipeBooksForUser(user.Uuid, cancellationToken)).RequireAuthorization();
 
         endpoints.MapGet("/api/tags/all", async (IRecipeBookService service) 
-            => Results.Ok(await service.GetAllTags())).WithTags("Tags");
+            => Results.Ok(await service.GetAllTags())).WithTags("Tags").RequireAuthorization();
     }
 }
