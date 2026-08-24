@@ -17,5 +17,8 @@ public static class RecipeBookEndpoints
         
         recipeBookGroup.MapGet("", async (CancellationToken cancellationToken, IAuthenticatedUser user, IRecipeBookService recipeBookService) 
             => await recipeBookService.GetRecipeBooksForUser(user.Uuid, cancellationToken)).RequireAuthorization();
+
+        endpoints.MapGet("/api/tags/all", async (IRecipeBookService service) 
+            => Results.Ok(await service.GetAllTags())).WithTags("Tags");
     }
 }

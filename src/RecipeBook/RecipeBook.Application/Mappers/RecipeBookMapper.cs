@@ -13,4 +13,9 @@ public partial class RecipeBookMapper
     public partial RecipeBookDto ToRecipeBookDto(RecipeBookEntity recipeBook);
     
     public partial RecipeBookEntity ToRecipeBookEntity(RecipeBookDto recipeBookDto);
+
+    private static string[] MapTagsToArray(HashSet<string> tags) => [.. tags];
+    private static HashSet<string> MapTagArrayToSet(string[]? tags) => tags == null ? [] : new HashSet<string>(tags);
+
+    public partial void Update(RecipeBookEntity recipeBook, RecipeBookDto dto);
 }

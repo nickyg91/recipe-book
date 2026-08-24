@@ -9,4 +9,5 @@ public class RecipeBookEntity : BaseEntity
     public Guid Uuid { get; set; } = Guid.NewGuid();
     public UserEntity? User { get; set; }
     public HashSet<RecipeEntity> Recipes { get; set; } = [];
+    public HashSet<string> Tags { get; set; } = [];
 }
