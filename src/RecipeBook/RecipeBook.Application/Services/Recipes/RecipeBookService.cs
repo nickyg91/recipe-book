@@ -1,18 +1,17 @@
 using Microsoft.EntityFrameworkCore;
+using RecipeBook.Application.Exceptions;
 using RecipeBook.Application.Mappers;
 using RecipeBook.Domain.Dto;
 using RecipeBook.Domain.Entities.Recipes;
 using RecipeBook.Domain.Recipe;
 using RecipeBook.Infrastructure.Cache;
 using RecipeBook.Infrastructure.Database.Context.RecipeBook;
-using StackExchange.Redis;
 
 namespace RecipeBook.Application.Services.Recipes;
 
 internal sealed class RecipeBookService(
     RecipeBookDbContext dbContext,
-    IRedisCache redisCache,
-    ConnectionMultiplexer multiplexer
+    IRedisCache redisCache
 ) : IRecipeBookService
 {
     private readonly RecipeBookMapper _mapper = new();
@@ -28,12 +27,21 @@ internal sealed class RecipeBookService(
 
     public async Task<RecipeBookDto> GetRecipeBook(Guid recipeBookId, CancellationToken cancellationToken)
     {
-        throw new NotImplementedException();
+        RecipeBookEntity entity = await dbContext.RecipeBooks
+                                      .Include(x => x.Recipes)
+                                      .ThenInclude(x => x.RecipeSteps)
+                                      .ThenInclude(x => x.RecipeStepIngredients)
+                                      .Include(x => x.Recipes)
+                                      .ThenInclude(x => x.RecipeIngredients)
+                                      .SingleOrDefaultAsync(x => x.Uuid == recipeBookId, cancellationToken) 
+                                  ?? throw new EntityNotFoundException("Recipe book not found.");
+        
+        return _mapper.ToRecipeBookDto(entity);
     }
 
     public async Task DeleteRecipeBook(Guid recipeBookId)
     {
-        throw new NotImplementedException();
+        await dbContext.RecipeBooks.Where(x => x.Uuid == recipeBookId).ExecuteDeleteAsync();
     }
 
     public async Task<RecipeBookDto> CreateRecipeBook(Guid userId, RecipeBookDto recipeBookDto)
@@ -49,7 +57,6 @@ internal sealed class RecipeBookService(
             await redisCache.SetAsync(tagsKey, tag.ToLowerInvariant(), null);
         }
 
-        // Add to global unique tags set using raw Redis pipeline — no JSON serialization overhead.
         string allTagsKey = "all-unique-tags";
         foreach (string tag in recipeBookDto.Tags)
         {
@@ -73,7 +80,6 @@ internal sealed class RecipeBookService(
             await redisCache.SetAsync(tagsKey, tag.ToLowerInvariant(), null);
         }
 
-        // Add to global unique tags set using raw Redis pipeline — no JSON serialization overhead.
         string allTagsKey = "all-unique-tags";
         foreach (string tag in recipeBookDto.Tags)
         {
@@ -85,15 +91,12 @@ internal sealed class RecipeBookService(
 
     public async Task<HashSet<string>> GetAllTags()
     {
-        // O(1) — single Redis GET command on a SET.
-        // HashGetAll reads all members of the SET (stored internally as hash keys).
-        // No JSON serialization overhead — values are already plain strings from Redis.
         var entries = await redisCache.GetAsync<Dictionary<string, string>>("all-unique-tags") ?? [];
 
         HashSet<string> result = [];
         foreach (var kvp in entries)
         {
-            result.Add(kvp.Key); // The key IS the tag string stored by SetAsync
+            result.Add(kvp.Key);
         }
         return result;
     }
